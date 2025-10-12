@@ -94,6 +94,7 @@ public class Epée extends Objet {
     /**
      * Affiche les informations de l'épée sur la console.
      */
+    @Override
     public void affiche() {
         System.out.println(this);
     }
