@@ -1,0 +1,220 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
+package org.centrale.objet.WoE;
+
+import java.util.Random;
+
+/**
+ * Représente une créature générique du monde {@link World}.
+ * 
+ * <p>Une créature possède des caractéristiques communes telles que :</p>
+ * <ul>
+ *   <li>Ses points de vie ({@code ptVie})</li>
+ *   <li>Sa capacité d’attaque ({@code degAtt})</li>
+ *   <li>Sa capacité de parade ({@code ptPar})</li>
+ *   <li>Ses chances d’attaque et de parade ({@code pageAtt}, {@code pagePar})</li>
+ *   <li>Sa position dans le monde ({@link Point2D pos})</li>
+ * </ul>
+ * 
+ * <p>Cette classe sert de classe mère pour les personnages et les monstres du jeu.</p>
+ * 
+ * @author Imane
+ */
+public class Creature implements Deplacable{
+
+    /** Points de vie de la créature. */
+    private int ptVie;
+
+    /** Dégâts infligés lors d'une attaque. */
+    private int degAtt;
+
+    /** Points de parade (défense). */
+    private int ptPar;
+
+    /** Pourcentage de chance de réussir une attaque. */
+    private int pageAtt;
+
+    /** Pourcentage de chance de réussir une parade. */
+    private int pagePar;
+
+    /** Position de la créature dans le monde. */
+    private Point2D pos;
+
+    /**
+     * Constructeur par défaut.
+     * <p>Initialise tous les attributs à 0 et positionne la créature à (0,0).</p>
+     */
+    public Creature() {
+        this.ptVie = 0;
+        this.degAtt = 0;
+        this.ptPar = 0;
+        this.pageAtt = 0;
+        this.pagePar = 0;
+        this.pos = new Point2D();
+    }
+
+    /**
+     * Constructeur avec paramètres.
+     * 
+     * @param pV Points de vie
+     * @param dA Dégâts d’attaque
+     * @param pPar Points de parade
+     * @param paAtt Pourcentage de chance d’attaque
+     * @param paPar Pourcentage de chance de parade
+     * @param p Position initiale de la créature
+     */
+    public Creature(int pV, int dA, int pPar, int paAtt, int paPar, Point2D p) {
+        this.ptVie = pV;
+        this.degAtt = dA;
+        this.ptPar = pPar;
+        this.pageAtt = paAtt;
+        this.pagePar = paPar;
+        this.pos = new Point2D(p);
+    }
+
+    /**
+     * Constructeur de copie.
+     * 
+     * @param c Créature à copier
+     */
+    public Creature(Creature c) {
+        this.ptVie = c.ptVie;
+        this.degAtt = c.degAtt;
+        this.ptPar = c.ptPar;
+        this.pageAtt = c.pageAtt;
+        this.pagePar = c.pagePar;
+        this.pos = new Point2D(c.pos);
+    }
+
+    // --- Getters et Setters ---
+
+    /** @return les points de vie actuels de la créature */
+    public int getPtVie() {
+        return ptVie;
+    }
+
+    /** @param ptVie nouveaux points de vie */
+    public void setPtVie(int ptVie) {
+        this.ptVie = ptVie;
+    }
+
+    /** @return les dégâts d’attaque */
+    public int getDegAtt() {
+        return degAtt;
+    }
+
+    /** @param degAtt nouveaux dégâts d’attaque */
+    public void setDegAtt(int degAtt) {
+        this.degAtt = degAtt;
+    }
+
+    /** @return les points de parade */
+    public int getPtPar() {
+        return ptPar;
+    }
+
+    /** @param ptPar nouveaux points de parade */
+    public void setPtPar(int ptPar) {
+        this.ptPar = ptPar;
+    }
+
+    /** @return le pourcentage de réussite d’attaque */
+    public int getPageAtt() {
+        return pageAtt;
+    }
+
+    /** @param pageAtt nouveau pourcentage de réussite d’attaque */
+    public void setPageAtt(int pageAtt) {
+        this.pageAtt = pageAtt;
+    }
+
+    /** @return le pourcentage de réussite de parade */
+    public int getPagePar() {
+        return pagePar;
+    }
+
+    /** @param pagePar nouveau pourcentage de réussite de parade */
+    public void setPagePar(int pagePar) {
+        this.pagePar = pagePar;
+    }
+
+    /** @return la position actuelle de la créature */
+    public Point2D getPos() {
+        return pos;
+    }
+
+    /** @param pos nouvelle position de la créature */
+    public void setPos(Point2D pos) {
+        this.pos = pos;
+    }
+
+    // --- Méthodes de déplacement ---
+
+    /**
+     * Déplace la créature dans le monde aléatoirement, en évitant les cases occupées.
+     * 
+     * <p>Si la nouvelle position est libre, la créature s’y déplace et vérifie
+     * la présence d’un objet sur cette case via {@link World#chercherObjet(Creature)}.</p>
+     * 
+     * @param monde le monde dans lequel la créature évolue
+     */
+    
+    public void deplace(World monde){
+         Random rand= new Random();
+         Point2D newpos;
+        int dx;
+        int dy;
+        do{
+            dx=rand.nextInt(3)-1;
+            dy=rand.nextInt(3)-1;
+            newpos = new Point2D(this.pos.getX() + dx, this.pos.getY() + dy);
+        }while(monde.estOccupee(newpos) || (dx==0 && dy==0));
+        this.pos=newpos;
+    }
+
+    /**
+     * Déplace la créature d’un pas aléatoire (entre -1 et +1 en x et y).
+     * <p>Le déplacement continue tant que les deux coordonnées sont nulles
+     * (la créature doit effectivement bouger).</p>
+     */
+    
+    @Override
+    public void deplace() {
+        Random rand = new Random();
+        int dx;
+        int dy;
+
+        do {
+            dx = rand.nextInt(3) - 1;
+            dy = rand.nextInt(3) - 1;
+            this.getPos().translate(dx, dy);
+        } while (dx == 0 && dy == 0);
+    }
+
+    // --- Méthodes utilitaires ---
+
+    /**
+     * Retourne une représentation textuelle complète de la créature et de ses caractéristiques.
+     * 
+     * @return une chaîne contenant les valeurs de tous les attributs
+     */
+    @Override
+    public String toString() {
+        return "Points de vie : " + this.ptVie + "\n"
+                + "Dégâts : " + this.degAtt + "\n"
+                + "Points de parade : " + this.ptPar + "\n"
+                + "Chances d’attaque : " + this.pageAtt + "\n"
+                + "Chances de parade : " + this.pagePar + "\n"
+                + "Position : [" + this.pos.getX() + ", " + this.pos.getY() + "]";
+    }
+
+    /**
+     * Affiche les caractéristiques de la créature dans la console.
+     */
+    public void affiche() {
+        System.out.println(this);
+    }
+}
