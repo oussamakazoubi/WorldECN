@@ -251,29 +251,28 @@ public class World {
      *
      * @param c la créature concernée
      */
-    public void chercherObjet(Creature c) {
+    public void chercherObjet(Personnage p) {
         for (Objet o : maListeobj) { // Boucle for-each
-            if (o.getPosition().equals(c.getPos())) {
-                o.utiliserObjet(c);
+            if (o.getPosition().equals(p.getPos())) {
+                o.utiliserObjet(p);
+       
                 System.out.println(o.getNom()+ " est ramassé ");
                 maListeobj.remove(o);
             }
         }
-    }
     
-     public void chercherNourriture(Personnage p) {
         for (Nourriture n : maListeNour) { // Boucle for-each
             if (n.getPosition().equals(p.getPos())) {
-                n.utiliserNourriture(p);
-                System.out.println(n.getNom()+ " est ramassé ");
-                if(n.getDureeEffet()==0){
-                 //  Utilsable.add(n);
-                   maListeNour.remove(n);  
+                n.utiliserObjet(p);
+                p.getUtilisables().add(n);
+                p.mettreAJourEffets();
+                n.annulerEffet(p);
+                
                 }
                
             }
         }
-    }
+    
     public Creature ChercherCible(Personnage p){
         for(Monstre m: maListeMons){
             if( (m.getPos().distance(p.getPos())<p.getDistAttMax() )){

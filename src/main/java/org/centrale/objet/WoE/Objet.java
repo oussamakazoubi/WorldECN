@@ -93,7 +93,7 @@ public abstract class Objet {
      *
      * @param c la créature sur laquelle l'objet est utilisé
      */
-    public abstract void utiliserObjet(Creature c);
+    public abstract void utiliserObjet(Personnage p);
 
     /**
      * Retourne une représentation textuelle de l'objet.

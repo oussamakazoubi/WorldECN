@@ -68,7 +68,9 @@ public abstract class Nourriture extends Objet {
      * Applique l’effet de la nourriture sur un personnage.
      * @param p le personnage qui consomme la nourriture
      */
-    public abstract void utiliserNourriture(Personnage p);
+    
+    
+    public abstract void annulerEffet(Personnage p);
 
     // --- Méthodes utilitaires ---
     /**

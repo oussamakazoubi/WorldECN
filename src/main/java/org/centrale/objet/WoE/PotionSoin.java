@@ -64,8 +64,8 @@ public class PotionSoin extends Objet {
      * @param c la créature sur laquelle la potion est utilisée
      */
     @Override
-    public void utiliserObjet(Creature c) {
-        c.setPtVie(c.getPtVie() + ptVieRendus);
+    public void utiliserObjet(Personnage p) {
+        p.setPtVie(p.getPtVie() + ptVieRendus);
     }
 
     /**

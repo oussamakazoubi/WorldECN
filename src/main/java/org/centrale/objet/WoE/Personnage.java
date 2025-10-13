@@ -7,6 +7,7 @@ package org.centrale.objet.WoE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * La classe {@code Personnage} représente un être jouable ou contrôlable dans le monde.
@@ -25,7 +26,9 @@ import java.util.HashMap;
  * @see Creature
  */
 public class Personnage extends Creature {
-    private HashMap<String, Integer> effetsActifs = new HashMap<>();
+    
+    private ArrayList<Nourriture> Utilisables;
+    
     /** Nom du personnage */
     private String nom;
 
@@ -42,6 +45,7 @@ public class Personnage extends Creature {
         super();
         this.nom = "Non nommee"; // Better this way Trust me
         this.distAttMax = 0;
+        Utilisables= new ArrayList<>();
     }
 
     /**
@@ -72,6 +76,16 @@ public class Personnage extends Creature {
         this.nom = perso.nom;
         this.distAttMax = perso.distAttMax;
     }
+
+    public ArrayList<Nourriture> getUtilisables() {
+        return Utilisables;
+    }
+
+    public void setUtilisables(ArrayList<Nourriture> Utilisables) {
+        this.Utilisables = Utilisables;
+    }
+    
+    
 
     /**
      * Retourne le nom du personnage.
@@ -144,28 +158,23 @@ public class Personnage extends Creature {
     public void deplace(World monde) {
         super.deplace(monde);
         monde.chercherObjet(this);
-        monde.chercherNourriture(this);
+       
     }
     
-    
-    public void setEffetActif(String nomEffet, int duree, int valeur) {
-    effetsActifs.put(nomEffet, duree);
-}
-
-    public void miseAJourEffets() {
-        ArrayList<String> aSupprimer = new ArrayList<>();
-        for (HashMap.Entry<String, Integer> effet : effetsActifs.entrySet()) {
-            int reste = effet.getValue() - 1;
-            if (reste <= 0) {
-                // Rétablir la caractéristique initiale ici
-                System.out.println("Effet " + effet.getKey() + " terminé !");
-                aSupprimer.add(effet.getKey());
-            } else {
-                effetsActifs.put(effet.getKey(), reste);
+    public void mettreAJourEffets() {
+        Iterator<Nourriture> it = Utilisables.iterator();
+        while (it.hasNext()) {
+            Nourriture n = it.next();
+            if (n.getEstActive()) {
+                n.decrementerEffet();
+                if (n.getDureeEffet() == 0) {
+                    System.out.println("L'effet de " + n.getNom() + " sur " + nom + " est terminé.");
+                    n.annulerEffet(this); // retire le bonus (ex: -2 degAtt)
+                    it.remove(); // supprime la nourriture expirée
+                }
             }
         }
-        for (String e : aSupprimer) {
-            effetsActifs.remove(e);
-        }
     }
-}
+    
+    }
+

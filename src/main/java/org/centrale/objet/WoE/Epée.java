@@ -73,8 +73,8 @@ public class Epée extends Objet {
      * @param c la créature équipée de l'épée
      */
     @Override
-    public void utiliserObjet(Creature c) {
-        c.setDegAtt(c.getDegAtt() + bonusAtt);
+    public void utiliserObjet(Personnage p) {
+        p.setDegAtt(p.getDegAtt() + bonusAtt);
     }
 
     /**

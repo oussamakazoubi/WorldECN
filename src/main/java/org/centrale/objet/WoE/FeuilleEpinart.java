@@ -19,28 +19,36 @@ public class FeuilleEpinart extends Nourriture {
 
     /**
      * Constructeur de la feuille d’épinard.
+     * @param nom
      * @param position position de la nourriture sur la carte
+     * @param dureeEffet
+     * @param bpnusDegAtt
      */
     public FeuilleEpinart( String nom, Point2D position, int dureeEffet, int bpnusDegAtt) {
         super("Feuille d’épinard", position, 3); // effet dure 3 tours
         this.bonusDegAtt = 2;
     }
 
-    @Override
-    public void utiliserNourriture(Personnage p) {
+    public void utiliserObjet(Personnage p) {
+      
         if (getEstActive()==false){
             System.out.println(p.getNom() + " mange une feuille d’épinard !");
             p.setDegAtt(p.getDegAtt() + bonusDegAtt);
             setEstActive(true);
-            this.decrementerEffet();
-
-            if (getEstActive() && getDureeEffet() == 0) {
+        }
+    }
+    public void annulerEffet(Personnage p){
                 System.out.println("L'effet de la feuille d’épinard sur " + p.getNom() + " s’est dissipé.");
                 p.setDegAtt(p.getDegAtt() - bonusDegAtt);
                 setEstActive(false);
             }
+
+   
+
+  
         }
-    }   
-}
+    
+
+   
     
 
