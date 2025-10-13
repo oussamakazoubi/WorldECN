@@ -7,8 +7,6 @@ package org.centrale.objet.WoE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * La classe {@code Personnage} représente un être jouable ou contrôlable dans le monde.
@@ -27,9 +25,7 @@ import java.util.Map;
  * @see Creature
  */
 public class Personnage extends Creature {
-
     private HashMap<String, Integer> effetsActifs = new HashMap<>();
-
     /** Nom du personnage */
     private String nom;
 
@@ -44,7 +40,7 @@ public class Personnage extends Creature {
      */
     public Personnage() {
         super();
-        this.nom = "Nom Nommee"; // C'est mieux Comme ca trust me
+        this.nom = "Non nommee"; // Better this way Trust me
         this.distAttMax = 0;
     }
 
@@ -150,26 +146,14 @@ public class Personnage extends Creature {
         monde.chercherObjet(this);
     }
     
-    private static class Effet {
-    String nomEffet;
-    String caract;  // nom de la caractéristique modifiée
-    int valeur;     // valeur modifiée (+/-)
-    int duree;      // durée restante
-
-    Effet(String nomEffet, String caract, int valeur, int duree) {
-        this.nomEffet = nomEffet;
-        this.caract = caract;
-        this.valeur = valeur;
-        this.duree = duree;
-    }
-}
+    
     public void setEffetActif(String nomEffet, int duree, int valeur) {
     effetsActifs.put(nomEffet, duree);
 }
 
     public void miseAJourEffets() {
-        List<String> aSupprimer = new ArrayList<>();
-        for (Map.Entry<String, Integer> effet : effetsActifs.entrySet()) {
+        ArrayList<String> aSupprimer = new ArrayList<>();
+        for (HashMap.Entry<String, Integer> effet : effetsActifs.entrySet()) {
             int reste = effet.getValue() - 1;
             if (reste <= 0) {
                 // Rétablir la caractéristique initiale ici
