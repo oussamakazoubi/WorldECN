@@ -94,6 +94,7 @@ public class PotionSoin extends Objet {
     /**
      * Affiche les informations de la potion sur la console.
      */
+    @Override
     public void affiche() {
         System.out.println(this);
     }
