@@ -9,7 +9,6 @@ package org.centrale.objet.WoE;
  * @author user
  */
 
-
 /**
  * Classe de base pour tous les éléments présents dans le monde (position).
  */

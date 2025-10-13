@@ -16,6 +16,8 @@ import java.util.*;
  * @author Imane
  */
 public class World {
+    
+    protected ArrayList<Nourriture> maListeNour;
 
     /** Taille de la grille par défaut (50x50). */
     public static final int TAILLE_PAR_DEFAUT = 50;
@@ -40,6 +42,7 @@ public class World {
         maListeMons = new ArrayList<>();
         maListeobj = new ArrayList<>();
         nomsUtilises = new HashSet<>();
+        maListeNour = new ArrayList<>();
     }
 
 
@@ -258,6 +261,19 @@ public class World {
         }
     }
     
+     public void chercherNourriture(Personnage p) {
+        for (Nourriture n : maListeNour) { // Boucle for-each
+            if (n.getPosition().equals(p.getPos())) {
+                n.utiliserNourriture(p);
+                System.out.println(n.getNom()+ " est ramassé ");
+                if(n.getDureeEffet()==0){
+                 //  Utilsable.add(n);
+                   maListeNour.remove(n);  
+                }
+               
+            }
+        }
+    }
     public Creature ChercherCible(Personnage p){
         for(Monstre m: maListeMons){
             if( (m.getPos().distance(p.getPos())<p.getDistAttMax() )){

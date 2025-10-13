@@ -16,9 +16,9 @@ package org.centrale.objet.WoE;
  * La nourriture offre un effet temporaire (bonus ou malus)
  * sur certaines caractéristiques d’un personnage.
  */
-public abstract class Nourriture extends ElementDeJeu {
+public abstract class Nourriture extends Objet {
 
-    private String nom;
+    
     private int dureeEffet; // nombre de tours pendant lesquels l'effet dure
     private boolean estActive; // indique si l'effet est encore actif
 
@@ -27,7 +27,6 @@ public abstract class Nourriture extends ElementDeJeu {
      */
     public Nourriture() {
         super();
-        this.nom = "";
         this.dureeEffet = 0;
         this.estActive = false;
     }
@@ -39,20 +38,14 @@ public abstract class Nourriture extends ElementDeJeu {
      * @param dureeEffet Durée de l'effet en tours
      */
     public Nourriture(String nom, Point2D position, int dureeEffet) {
-        super(position);
-        this.nom = nom;
+        super(nom, position);
         this.dureeEffet = dureeEffet;
         this.estActive = false;
     }
 
     // --- Accesseurs / Mutateurs ---
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+    
+    
 
     public int getDureeEffet() {
         return dureeEffet;
@@ -62,11 +55,11 @@ public abstract class Nourriture extends ElementDeJeu {
         this.dureeEffet = dureeEffet;
     }
 
-    public boolean isActive() {
+    public boolean getEstActive() {
         return estActive;
     }
 
-    public void setActive(boolean active) {
+    public void setEstActive(boolean active) {
         this.estActive = active;
     }
 
@@ -82,18 +75,15 @@ public abstract class Nourriture extends ElementDeJeu {
      * Décrémente la durée de l'effet d'un tour.
      * Renvoie true si l'effet est encore actif, false sinon.
      */
-    public boolean decrementerEffet() {
+    public void decrementerEffet() {
         if (dureeEffet > 0) {
             dureeEffet--;
         }
-        if (dureeEffet == 0) {
-            estActive = false;
-        }
-        return estActive;
+        
     }
 
     @Override
     public String toString() {
-        return nom + " (effet : " + dureeEffet + " tours restants)";
+        return super.toString() + " (effet : " + dureeEffet + " tours restants)";
     }
 }

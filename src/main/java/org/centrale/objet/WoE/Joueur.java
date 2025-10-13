@@ -21,6 +21,7 @@ public class Joueur {
     private int mdp;
     private String persoChoisi;
     private ArrayList<Class<? extends Personnage>> PersoJouable;
+    private ArrayList<Objet> Utilisables;
 
     public Joueur() {
         nom = "";
@@ -28,6 +29,7 @@ public class Joueur {
         email = "";
         mdp = 0;
         PersoJouable = new ArrayList<>(Arrays.asList(Guerrier.class, Archer.class));
+        Utilisables= new ArrayList<>();
     }
 
     public Joueur(String nom, String pseudo, String email, int mdp, ArrayList<Class<? extends Personnage>> PersoJouable) {
@@ -44,6 +46,14 @@ public class Joueur {
         this.email = j.email;
         this.mdp = j.mdp;
         this.PersoJouable = j.PersoJouable;
+    }
+    
+    public ArrayList<Objet> getUtilisables() {
+        return Utilisables;
+    }
+
+    public void setUtilisables(ArrayList<Objet> Utilisables) {
+        this.Utilisables = Utilisables;
     }
 
    public Personnage ChoisirPersonnage(World monde) {

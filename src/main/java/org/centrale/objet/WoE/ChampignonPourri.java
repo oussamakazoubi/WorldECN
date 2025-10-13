@@ -18,15 +18,21 @@ public class ChampignonPourri extends Nourriture {
 
     @Override
     public void utiliserNourriture(Personnage p) {
-        System.out.println(p.getNom() + " mange un champignon pourri... beurk !");
-        p.setPtPar(p.getPtPar() - malusDefense); // diminue la défense
-        setActive(true);
+        if(getEstActive()==false){
+            System.out.println(p.getNom() + " mange un champignon pourri... beurk !");
+             p.setPtPar(p.getPtPar() - malusDefense); // diminue la défense
+            setEstActive(true);
+            this.decrementerEffet();
+
+            if (getEstActive() && getDureeEffet() == 0) {
+                System.out.println("L'effet de la feuille d’épinard sur " + p.getNom() + " s’est dissipé.");
+                p.setPtPar(p.getPtPar() + malusDefense);
+                setEstActive(false);
+            }
+        }
+        
     }
 
-    public void finEffet(Personnage p) {
-        System.out.println("Le malus du champignon pourri sur " + p.getNom() + " s’est dissipé.");
-        p.setPtPar(p.getPtPar() + malusDefense); // remet la défense normale
-        setActive(false);
-    }
+    
 }
 

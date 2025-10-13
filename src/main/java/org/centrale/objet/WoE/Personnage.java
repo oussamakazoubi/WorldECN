@@ -144,6 +144,7 @@ public class Personnage extends Creature {
     public void deplace(World monde) {
         super.deplace(monde);
         monde.chercherObjet(this);
+        monde.chercherNourriture(this);
     }
     
     
