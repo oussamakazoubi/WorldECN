@@ -5,6 +5,11 @@
 
 package org.centrale.objet.WoE;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * La classe {@code Personnage} représente un être jouable ou contrôlable dans le monde.
  * <p>
@@ -22,7 +27,9 @@ package org.centrale.objet.WoE;
  * @see Creature
  */
 public class Personnage extends Creature {
-private Map<String, Integer> effetsActifs = new HashMap<>();
+
+    private HashMap<String, Integer> effetsActifs = new HashMap<>();
+
     /** Nom du personnage */
     private String nom;
 
@@ -37,7 +44,7 @@ private Map<String, Integer> effetsActifs = new HashMap<>();
      */
     public Personnage() {
         super();
-        this.nom = "";
+        this.nom = "Nom Nommee"; // C'est mieux Comme ca trust me
         this.distAttMax = 0;
     }
 
@@ -160,20 +167,20 @@ private Map<String, Integer> effetsActifs = new HashMap<>();
     effetsActifs.put(nomEffet, duree);
 }
 
-public void miseAJourEffets() {
-    List<String> aSupprimer = new ArrayList<>();
-    for (Map.Entry<String, Integer> effet : effetsActifs.entrySet()) {
-        int reste = effet.getValue() - 1;
-        if (reste <= 0) {
-            // Rétablir la caractéristique initiale ici
-            System.out.println("Effet " + effet.getKey() + " terminé !");
-            aSupprimer.add(effet.getKey());
-        } else {
-            effetsActifs.put(effet.getKey(), reste);
+    public void miseAJourEffets() {
+        List<String> aSupprimer = new ArrayList<>();
+        for (Map.Entry<String, Integer> effet : effetsActifs.entrySet()) {
+            int reste = effet.getValue() - 1;
+            if (reste <= 0) {
+                // Rétablir la caractéristique initiale ici
+                System.out.println("Effet " + effet.getKey() + " terminé !");
+                aSupprimer.add(effet.getKey());
+            } else {
+                effetsActifs.put(effet.getKey(), reste);
+            }
+        }
+        for (String e : aSupprimer) {
+            effetsActifs.remove(e);
         }
     }
-    for (String e : aSupprimer) {
-        effetsActifs.remove(e);
-    }
-}
 }

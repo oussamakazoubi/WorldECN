@@ -105,8 +105,7 @@ public class TestWoE {
         // Exécution des tests de performance 
         TestPerformance.tester();  // Exécution de la méthode de test de performance
    
-        
-      
+
         }*/
     public static void main(String[] args) {
         Joueur j=new Joueur();
@@ -114,7 +113,6 @@ public class TestWoE {
         monde.creerMondeAlea(2, 3, 3, 5, 2, 1,  1);
         monde.tourDeJeuHumain(j);
         monde.tourDeJeu();
-    
     }
 }
 

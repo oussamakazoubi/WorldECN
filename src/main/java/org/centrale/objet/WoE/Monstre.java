@@ -52,29 +52,3 @@ public class Monstre extends Creature {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

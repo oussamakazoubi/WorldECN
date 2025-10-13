@@ -65,6 +65,17 @@ public class Archer extends Personnage implements Combattant{
         this.nbFleches = a.nbFleches;
     }
 
+    /** Retourne le nombre de flèches restantes. */
+    public int getNbFleches() {
+        return nbFleches;
+    }
+
+    /** Modifie le nombre de flèches restantes. */
+    public void setNbFleches(int nbFleches) {
+        this.nbFleches = nbFleches;
+    }
+
+
     /**
      * Permet à l’archer de combattre une autre créature.
      * 
@@ -83,10 +94,14 @@ public class Archer extends Personnage implements Combattant{
         Random rand = new Random();
         int degatsSubis = 0;
         double dist = this.getPos().distance(c.getPos());
+        System.out.println("Tentative de combat ");
+        System.out.println("L’ennemi a " + c.getPtVie() + " points de vie.");
 
         // Combat corps à corps
         if (dist == 1) {
+            System.out.println("Le combat au corps à corps débute !");
             int jetAttaque = rand.nextInt(100) + 1;
+            // Attacking
             if (jetAttaque > this.getPageAtt()) {
                 System.out.println("Attaque ratée");
             } else {
@@ -94,8 +109,12 @@ public class Archer extends Personnage implements Combattant{
 
                 int jetParade = rand.nextInt(100) + 1;
                 if (jetParade > c.getPagePar()) {
+                    System.out.println("La défense a échoué !");
                     degatsSubis = this.getDegAtt();
+                    System.out.println(" - "+degatsSubis+" Damage");
                 } else {
+                    System.out.println(" - "+this.getDegAtt()+" Damage &  "
+                            +c.getPtPar()+" Dmg Resiste = "+ (this.getDegAtt() - c.getPtPar()) +" Damage" );
                     degatsSubis = this.getDegAtt() - c.getPtPar();
                 }
 
@@ -109,6 +128,9 @@ public class Archer extends Personnage implements Combattant{
 
         // Combat à distance
         else if (nbFleches > 0 && dist > 1 && dist < this.getDistAttMax()) {
+            System.out.println("Le combat à distance a commencé !");
+            System.out.println("Archer a \" + this.nbFleches + \" flèches");
+            System.out.println("L’archer tire une flèche !");
             this.nbFleches--;
             int jetAttaque = rand.nextInt(100) + 1;
             if (jetAttaque > this.getPageAtt()) {
@@ -123,9 +145,7 @@ public class Archer extends Personnage implements Combattant{
         } else if (nbFleches <= 0 && dist > 1) {
             System.out.println("Impossible d’attaquer à distance : plus de flèches !");
         }
+        else System.out.println("\n Ennemi trop éloigné pour le combat !");
     }
 }
-
-
-
 

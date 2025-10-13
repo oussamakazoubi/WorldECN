@@ -43,18 +43,6 @@ public class Creature implements Deplacable{
     /** Position de la créature dans le monde. */
     private Point2D pos;
 
-    /**
-     * Constructeur par défaut.
-     * <p>Initialise tous les attributs à 0 et positionne la créature à (0,0).</p>
-     */
-    public Creature() {
-        this.ptVie = 0;
-        this.degAtt = 0;
-        this.ptPar = 0;
-        this.pageAtt = 0;
-        this.pagePar = 0;
-        this.pos = new Point2D();
-    }
 
     /**
      * Constructeur avec paramètres.
@@ -81,12 +69,15 @@ public class Creature implements Deplacable{
      * @param c Créature à copier
      */
     public Creature(Creature c) {
-        this.ptVie = c.ptVie;
-        this.degAtt = c.degAtt;
-        this.ptPar = c.ptPar;
-        this.pageAtt = c.pageAtt;
-        this.pagePar = c.pagePar;
-        this.pos = new Point2D(c.pos);
+        this(c.ptVie, c.degAtt, c.ptPar, c.pageAtt, c.pagePar, c.pos);
+    }
+
+    /**
+     * Constructeur par défaut.
+     * <p>Initialise tous les attributs à 0 et positionne la créature à (0,0).</p>
+     */
+    public Creature() {
+        this(0, 0, 0, 0, 0, new Point2D(0, 0));
     }
 
     // --- Getters et Setters ---
@@ -153,6 +144,24 @@ public class Creature implements Deplacable{
 
     // --- Méthodes de déplacement ---
 
+
+    /**
+     * Déplace la créature d’un pas aléatoire (entre -1 et +1 en x et y).
+     * <p>Le déplacement continue tant que les deux coordonnées sont nulles
+     * (la créature doit effectivement bouger).</p>
+     */
+
+    @Override
+    public void deplace() {
+        Random rand = new Random();
+        int dx = rand.nextInt(3) - 1;
+        int dy = rand.nextInt(3) - 1;
+        if (dx==0 && dy==0) this.deplace();
+        else this.getPos().translate(dx, dy);
+    }
+
+
+
     /**
      * Déplace la créature dans le monde aléatoirement, en évitant les cases occupées.
      * 
@@ -163,36 +172,18 @@ public class Creature implements Deplacable{
      */
     
     public void deplace(World monde){
-         Random rand= new Random();
-         Point2D newpos;
-        int dx;
-        int dy;
+        int dx, dy;
+        Random rand = new Random();
+        Point2D newpos;
         do{
-            dx=rand.nextInt(3)-1;
-            dy=rand.nextInt(3)-1;
+            dx = rand.nextInt(3) - 1;
+            dy = rand.nextInt(3) - 1;
             newpos = new Point2D(this.pos.getX() + dx, this.pos.getY() + dy);
         }while(monde.estOccupee(newpos) || (dx==0 && dy==0));
         this.pos=newpos;
     }
 
-    /**
-     * Déplace la créature d’un pas aléatoire (entre -1 et +1 en x et y).
-     * <p>Le déplacement continue tant que les deux coordonnées sont nulles
-     * (la créature doit effectivement bouger).</p>
-     */
-    
-    @Override
-    public void deplace() {
-        Random rand = new Random();
-        int dx;
-        int dy;
 
-        do {
-            dx = rand.nextInt(3) - 1;
-            dy = rand.nextInt(3) - 1;
-            this.getPos().translate(dx, dy);
-        } while (dx == 0 && dy == 0);
-    }
 
     // --- Méthodes utilitaires ---
 
