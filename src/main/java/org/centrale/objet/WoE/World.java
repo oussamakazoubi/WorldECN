@@ -34,6 +34,10 @@ public class World {
     /** Ensemble des noms déjà utilisés pour éviter les doublons. */
     protected HashSet<String> nomsUtilises;
 
+
+    private Joueur  joueur;
+
+
     /**
      * Constructeur par défaut. Initialise les listes et la structure du monde.
      */
@@ -45,7 +49,13 @@ public class World {
         maListeNour = new ArrayList<>();
     }
 
+    public Joueur getJoueur() {
+        return joueur;
+    }
 
+    public void setJoueur(Joueur joueur) {
+        this.joueur = joueur;
+    }
 
     /**
      * Définit aléatoirement les statistiques de base d'une créature.
@@ -254,9 +264,13 @@ public class World {
     public void chercherObjet(Personnage p) {
         for (Objet o : maListeobj) { // Boucle for-each
             if (o.getPosition().equals(p.getPos())) {
+                if (p==joueur.getPersoJoueur()){
+                    joueur.getInventaire().add(o);
+                    System.out.println(o.getNom()+ " est ramasse ");
+                }
                 o.utiliserObjet(p);
        
-                System.out.println(o.getNom()+ " est ramassé ");
+                System.out.println(o.getNom()+ " est utilise ");
                 maListeobj.remove(o);
             }
         }
@@ -337,6 +351,5 @@ public class World {
             o.affiche();
         }
     }
-
 
 }

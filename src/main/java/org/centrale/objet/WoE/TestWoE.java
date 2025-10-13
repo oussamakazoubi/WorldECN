@@ -111,8 +111,10 @@ public class TestWoE {
         Joueur j=new Joueur();
         World monde= new World();
         monde.creerMondeAlea(2, 3, 3, 5, 2, 1,  1);
-        monde.tourDeJeuHumain(j);
-        monde.tourDeJeu();
+        j.ChoisirPersonnage(monde);
+        j.choisirPreference(monde);
+        //monde.tourDeJeuHumain(j);
+        //monde.tourDeJeu();
     }
 }
 
