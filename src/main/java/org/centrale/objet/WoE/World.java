@@ -249,7 +249,7 @@ public class World {
     /**
      * Permet à une créature de chercher et utiliser un objet présent sur sa position.
      *
-     * @param c la créature concernée
+     * @param p
      */
     public void chercherObjet(Personnage p) {
         for (Objet o : maListeobj) { // Boucle for-each
@@ -282,8 +282,14 @@ public class World {
         return null;
     }
     
-
-
+     public void chercherObjetInventaire(Joueur j) {
+        for (Objet o : maListeobj) { // Boucle for-each
+            if (o.getPosition().equals(j.getPos())) {
+                j.getInventaire().add(o);
+            }
+        }
+     }
+    
     /**
      * Effectue un tour de jeu :
      * <ul>
