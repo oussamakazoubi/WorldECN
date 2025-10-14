@@ -259,7 +259,7 @@ public class World {
     /**
      * Permet à une créature de chercher et utiliser un objet présent sur sa position.
      *
-     * @param c la créature concernée
+     * @param p la créature concernée
      */
     public void chercherObjet(Personnage p) {
         for (Objet o : maListeobj) { // Boucle for-each
@@ -269,9 +269,10 @@ public class World {
                     System.out.println(o.getNom()+ " est ramasse ");
                 }
                 o.utiliserObjet(p);
-       
-                System.out.println(o.getNom()+ " est utilise ");
-                maListeobj.remove(o);
+                System.out.println(o.getNom() + " est utilise ");
+                if (!(o instanceof NuageToxique)) {
+                    maListeobj.remove(o);
+                }
             }
         }
     
@@ -286,15 +287,22 @@ public class World {
                
             }
         }
-    
-    public Creature ChercherCible(Personnage p){
-        for(Monstre m: maListeMons){
-            if( (m.getPos().distance(p.getPos())<p.getDistAttMax() )){
-                return m;
-            }  
+
+    public ArrayList<Creature> ChercherCibles(Personnage p) {
+        ArrayList<Creature> maListeCreatures = new ArrayList<>();
+        maListeCreatures.addAll(maListePers);
+        maListeCreatures.addAll(maListeMons);
+        ArrayList<Creature> cibles = new ArrayList<>();
+        for (Creature cible : maListeCreatures) {
+            double dist = p.getPos().distance(cible.getPos());
+            double distMax = p.getDistAttMax();
+            if (dist <= distMax) {
+                cibles.add(cible);
+            }
         }
-        return null;
+        return cibles;
     }
+
     
 
 
@@ -307,12 +315,18 @@ public class World {
      */
     
     public void tourDeJeu() {
-        List<Creature> maListeCreatures = new ArrayList<>();
+        ArrayList<Creature> maListeCreatures = new ArrayList<>();
         maListeCreatures.addAll(maListePers);
         maListeCreatures.addAll(maListeMons);
 
         for (Creature c : maListeCreatures) {
             c.deplace(this);
+        }
+
+        for (Objet o : maListeobj) {
+            if (o instanceof Deplacable) {
+                ((Deplacable) o).deplace();
+            }
         }
 
 

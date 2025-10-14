@@ -19,7 +19,7 @@ public class ChampignonPourri extends Nourriture {
     @Override
     public void utiliserObjet(Personnage p) {
       
-        if (getEstActive()==false){
+        if (!getEstActive()){
             System.out.println(p.getNom() + " mange une feuille d’épinard !");
             p.setDegAtt(p.getDegAtt() - malusDefense);
             setEstActive(true);
@@ -31,8 +31,5 @@ public class ChampignonPourri extends Nourriture {
                 setEstActive(false);
             }
 
-    
-
-    
 }
 

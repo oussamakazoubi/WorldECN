@@ -6,7 +6,6 @@ package org.centrale.objet.WoE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -74,6 +73,7 @@ public class Joueur {
     }
 
     public void ChoisirPersonnage(World monde) {
+        inventaire = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         Personnage perso = null;
 
@@ -106,6 +106,52 @@ public class Joueur {
 }
 
 
+    private void combattreJoueur(World monde) {
+        ArrayList<Creature> cibles = monde.ChercherCibles(this.persoJoueur);
+
+        if (cibles.isEmpty()) {
+            System.out.println("Aucune cible à portée !");
+            return;
+        }
+
+        System.out.println("=== Cibles disponibles ===");
+        for (int i = 0; i < cibles.size(); i++) {
+            Creature c = cibles.get(i);
+            String msg = "";
+            if (c instanceof Personnage){
+                msg = " - " + ((Personnage) c).getNom();
+            }
+            msg = msg + " (" + c.getClass().getSimpleName() +
+                    ") à la position " + c.getPos().toString();
+            System.out.println(msg);
+        }
+
+        Scanner input = new Scanner(System.in);
+        System.out.print("Choisissez la cible à attaquer (numéro) : ");
+        int choixCible=0;
+        try {
+            choixCible = input.nextInt();
+            if (choixCible < 1 || choixCible > cibles.size()) {
+                System.out.println("Numéro invalide. Aucun combat effectué.");
+                combattreJoueur(monde);
+            }
+        } catch (Exception e) {
+            System.out.println("Entrée invalide. Aucun combat effectué.");
+            combattreJoueur(monde);
+        }
+
+        Creature cible = cibles.get(choixCible - 1);
+
+        try {
+            this.persoJoueur.getClass()
+                    .getMethod("combattre", Creature.class)
+                    .invoke(this.persoJoueur, cible);
+        } catch (Exception e) {
+            System.out.println("Ce personnage ne peut pas combattre !");
+        }
+    }
+
+
     public void choisirPreference(World monde) {
         if (this.persoJoueur == null) {
             System.out.println("Aucun personnage valide choisi. Fin du tour.");
@@ -122,21 +168,7 @@ public class Joueur {
             switch (choix) {
                 case "1", "deplacer" -> this.persoJoueur.deplace(monde);
 
-                case "2", "combattre" -> {
-                    Creature cible = monde.ChercherCible(this.persoJoueur);
-                    if (cible != null) {
-                        try {
-                            // Utilisation de réflexion pour invoquer combattre si existant
-                            this.persoJoueur.getClass()
-                                 .getMethod("combattre", Creature.class)
-                                 .invoke(this.persoJoueur, cible);
-                        } catch (Exception e) {
-                            System.out.println("Ce personnage ne peut pas combattre !");
-                        }
-                    } else {
-                        System.out.println("Aucune cible à portée !");
-                    }
-                }
+                case "2", "combattre" -> this.combattreJoueur(monde);
 
                 case "3", "Iventaire" -> utiliserObjetInventaire();
 
@@ -191,4 +223,43 @@ public class Joueur {
             utiliserObjetInventaire();
         }
     }
+
+
+
+        public void deplaceJoueur() {
+            System.out.println("\nChoisissez une direction pour vous déplacer :");
+            System.out.println("  Z  : haut");
+            System.out.println("  S  : bas");
+            System.out.println("  Q  : gauche");
+            System.out.println("  D  : droite");
+            System.out.print("Votre choix : ");
+
+            Scanner sc = new Scanner(System.in);
+            char choix = sc.next().toLowerCase().charAt(0);
+            int persoX = persoJoueur.getPos().getX();
+            int persoY = persoJoueur.getPos().getY();
+
+            int dx = 0, dy = 0;
+            if (choix=='z' && persoY<World.TAILLE_PAR_DEFAUT-1) {
+                dy = 1;
+            }
+            else if (choix=='s' && persoY>0) {
+                dy = -1;
+            }
+            else if (choix=='q' && persoX>0) {
+                dx = -1;
+            }
+            else if (choix=='d' && persoX<World.TAILLE_PAR_DEFAUT-1) {
+                dx = 1;
+            }
+            else {
+                System.out.println("Entrée invalide. Vous restez sur place.");
+                deplaceJoueur();
+            }
+
+            persoJoueur.getPos().translate(dx, dy);
+            System.out.println(persoJoueur.getNom() + " se déplace en " + persoJoueur.getPos().toString());
+        }
+
+
 }
