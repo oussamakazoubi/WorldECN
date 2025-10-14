@@ -111,8 +111,79 @@ public class TestWoE {
         Joueur j=new Joueur();
         World monde= new World();
         monde.creerMondeAlea(2, 3, 3, 5, 2, 1,  1);
-        monde.tourDeJeuHumain(j);
-        monde.tourDeJeu();
+        j.ChoisirPersonnage(monde);
+        j.choisirPreference(monde);
+        //monde.tourDeJeuHumain(j);
+        //monde.tourDeJeu();
+    
+    
+    
+        // 1️⃣ NullPointerException
+        try {
+            String s = null;
+            System.out.println(s.length());
+        } catch (NullPointerException e) {
+            System.out.println("Erreur : objet null !");
+        }
+
+        // 2️⃣ ArrayIndexOutOfBoundsException
+        try {
+            int[] tab = {1, 2, 3};
+            System.out.println(tab[5]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Erreur : indice en dehors du tableau !");
+        }
+
+        // 3️⃣ ArithmeticException
+        try {
+            int x = 5 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("Erreur : division par zéro !");
+        }
+
+        // 4️⃣ ClassCastException
+        try {
+            Object o = new Integer(10);
+            String str = (String) o; // Mauvais cast
+        } catch (ClassCastException e) {
+            System.out.println("Erreur : mauvais transtypage !");
+        }
+
+        // 5️⃣ NumberFormatException
+        try {
+            String nombre = "abc";
+            int n = Integer.parseInt(nombre);
+        } catch (NumberFormatException e) {
+            System.out.println("Erreur : mauvais format de nombre !");
+        }
+
+        // 6️⃣ StackOverflowError
+        try {
+            recursive();
+        } catch (StackOverflowError e) {
+            System.out.println("Erreur : pile d'appels débordée !");
+        }
+
+        // 7️⃣ ConcurrentModificationException
+        try {
+            List<String> liste = new ArrayList<>();
+            liste.add("A");
+            liste.add("B");
+            for (String s : liste) {
+                liste.remove(s); // On modifie pendant qu'on parcourt
+            }
+        } catch (ConcurrentModificationException e) {
+            System.out.println("Erreur : modification concurrente !");
+        }
+
+        System.out.println("\nTous les tests sont terminés !");
     }
+
+    // méthode récursive sans fin
+    public static void recursive() {
+        recursive(); // s'appelle elle-même sans condition -> StackOverflowError
+    
 }
+}
+
 

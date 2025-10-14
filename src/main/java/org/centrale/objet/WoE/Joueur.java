@@ -22,9 +22,9 @@ public class Joueur {
     private int mdp;
     private Personnage persoJoueur;
     private ArrayList<Class<? extends Personnage>> PersoJouable;
-    private ArrayList<Objet> Inventaire;
-    
-    
+
+    private ArrayList<Objet> inventaire;
+
 
     public Joueur() {
         
@@ -33,7 +33,7 @@ public class Joueur {
         email = "";
         mdp = 0;
         PersoJouable = new ArrayList<>(Arrays.asList(Guerrier.class, Archer.class));
-        Inventaire = new ArrayList<>();
+        inventaire = new ArrayList<>();
         pos=new Point2D();
     }
 
@@ -88,11 +88,12 @@ public class Joueur {
     }
 
     public ArrayList<Objet> getInventaire() {
-        return Inventaire;
+        return inventaire;
     }
 
     public void setInventaire(ArrayList<Objet> Inventaire) {
-        this.Inventaire = Inventaire;
+        this.inventaire = Inventaire;
+
     }
 
     public Joueur(String nom, String pseudo, String email, int mdp, ArrayList<Class<? extends Personnage>> PersoJouable) {
@@ -110,57 +111,90 @@ public class Joueur {
         this.mdp = j.mdp;
         this.PersoJouable = j.PersoJouable;
     }
-    
-    
-
-   public void ChoisirPersonnage(World monde) {
-       String persoChoisi;
-    Scanner scanner = new Scanner(System.in);
-    Personnage perso = null;
-
-    while (perso == null) {
-        System.out.println("Rentrer un personnage jouable :");
-        persoChoisi = scanner.nextLine();
-
-        for (Class<? extends Personnage> cl : PersoJouable) {
-            if (persoChoisi.equalsIgnoreCase(cl.getSimpleName())) {
-                System.out.println("Rentrer le nom du personnage choisi :");
-                String NomPersoChoisi = scanner.nextLine();
-                try {
-                    perso = cl.getDeclaredConstructor().newInstance();
-                    monde.definirStatsAlea(perso);
-                    perso.setNom(NomPersoChoisi);
-                    monde.maListePers.add(perso);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        if (perso == null) {
-            System.out.println("Classe non jouable. Réessayez !");
-        }
+ public Personnage getPersoJoueur() {
+        return persoJoueur;
     }
 
-    persoJoueur= new Personnage(perso);
-}
-   public void utiliserObjetInventaire(World monde,int index){
-       if (index < 0 || index >= Inventaire.size()) {
+    public void setPersoJoueur(Personnage persoJoueur) {
+        this.persoJoueur = persoJoueur;
+    }
+    
+    public ArrayList<Objet> getinventaire() {
+        return inventaire;
+    }
+
+
+    public void setinventaire(ArrayList<Objet> inventaire) {
+        this.inventaire = inventaire;
+    }
+
+    public ArrayList<Class<? extends Personnage>> getpersoJouable() {
+        return PersoJouable;
+    }
+
+    public void setpersoJouable(ArrayList<Class<? extends Personnage>> persoJouable) {
+        PersoJouable = persoJouable;
+    }
+    
+
+  
+
+   
+
+    
+
+    public void ChoisirPersonnage(World monde) {
+         String persoChoisi;
+    
+        Scanner scanner = new Scanner(System.in);
+        Personnage perso = null;
+
+        while (perso == null) {
+            System.out.println("Rentrer un personnage jouable :");
+            persoChoisi = scanner.nextLine();
+
+            for (Class<? extends Personnage> cl : PersoJouable) {
+                if (persoChoisi.equalsIgnoreCase(cl.getSimpleName())) {
+                    System.out.println("Rentrer le nom du personnage choisi :");
+                    String NomPersoChoisi = scanner.nextLine();
+                    try {
+                        perso = cl.getDeclaredConstructor().newInstance();
+                        monde.definirStatsAlea(perso);
+                        perso.setNom(NomPersoChoisi);
+                        monde.maListePers.add(perso);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            if (perso == null) {
+                System.out.println("Classe non jouable. Réessayez !");
+                ChoisirPersonnage(monde);
+            }
+    }
+
+
+    persoJoueur= new Personnage(perso);}
+
+   public void utiliserObjetInventaire(int index){
+       if (index < 0 || index >= inventaire.size()) {
             System.out.println("Index invalide !");
             return;
         }
 
-        Objet obj = Inventaire.get(index);
+        Objet obj = inventaire.get(index);
         obj.utiliserObjet(persoJoueur);
         System.out.println("Objet utilisé : " + obj.getNom());
-        Inventaire.remove(index);
+        inventaire.remove(index);
         
    }
 
 
     public void choisirPreference(World monde) {
-        
+
         if (persoJoueur == null) {
+
             System.out.println("Aucun personnage valide choisi. Fin du tour.");
             return;
         }
@@ -169,21 +203,24 @@ public class Joueur {
         String choix;
 
         do {
-            System.out.println("Choisir action : 1=deplacer, 2=combattre, 3=quitter");
+            System.out.println("Choisir action : 1=deplacer, 2=combattre, 3=inventaire, 4=quitter");
             choix = scanner.nextLine();
 
             switch (choix) {
-                case "1", "deplacer" -> persoJoueur.deplace(monde);
-                      
 
-                case "2", "combattre" -> {
-                    Creature cible = monde.ChercherCible(persoJoueur);
+               
+                        
+                             case "1", "deplacer" -> persoJoueur.deplace(monde);
+
+                            case "2", "combattre" -> {
+                    Creature cible = monde.ChercherCible(this.persoJoueur);
                     if (cible != null) {
                         try {
                             // Utilisation de réflexion pour invoquer combattre si existant
-                            persoJoueur.getClass()
+                            this.persoJoueur.getClass()
                                  .getMethod("combattre", Creature.class)
-                                 .invoke(persoJoueur, cible);
+                                 .invoke(this.persoJoueur, cible);
+
                         } catch (Exception e) {
                             System.out.println("Ce personnage ne peut pas combattre !");
                         }
@@ -192,13 +229,60 @@ public class Joueur {
                     }
                 }
 
-                case "3", "quitter" -> System.out.println("Fin de jeu");
-                case "4", "utiliObjetInventaire" -> System.out.println("Fin de jeu");
+
+                case "3", "Iventaire" -> utiliserObjetInventaire();
+
+                case "4", "quitter" -> System.out.println("Fin de jeu");
+
+
                 default -> System.out.println("Refais ton choix !");
             }
 
-        } while (!choix.equals("3"));
+        } while (!choix.equals("4"));
 
-        monde.chercherObjet(persoJoueur);
+
+    }
+
+
+    public void utiliserObjetInventaire() {
+        if (inventaire.isEmpty()) {
+            System.out.println("Votre inventaire est vide !");
+            return;
+        }
+
+        System.out.println("=== Inventaire ===");
+        for (int i = 0; i < inventaire.size(); i++) {
+            System.out.println((i + 1) + " - " + inventaire.get(i).toString());
+        }
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Entrez le numéro de l’objet à utiliser : ");
+
+        try {
+            int choix = sc.nextInt();
+            if (choix < 1 || choix > inventaire.size()) {
+                System.out.println("Numéro invalide !");
+                return;
+            }
+
+            Objet objet = inventaire.get(choix - 1);
+            System.out.println("Vous utilisez : " + objet.getClass().getSimpleName());
+
+            // L’objet est utilisé : applique ses effets
+            objet.utiliserObjet(this.persoJoueur);
+
+            // L’objet est retiré de l’inventaire
+            inventaire.remove(choix - 1);
+
+            // L’objet rejoint la liste des effets actifs si applicable
+            if (objet instanceof Nourriture) {
+                persoJoueur.getUtilisables().add((Nourriture) objet);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Entrée invalide. Veuillez entrer un numéro.");
+            utiliserObjetInventaire();
+        }
+
     }
 }
