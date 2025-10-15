@@ -19,7 +19,8 @@ public class World {
 
 
     /** Taille de la grille par défaut (50x50). */
-    public static final int TAILLE_PAR_DEFAUT = 7;
+    public int longueur;
+    public int largeur;
 
     /** Liste des personnages présents dans le monde. */
     protected ArrayList<Personnage> maListePers;
@@ -45,6 +46,22 @@ public class World {
         maListeMons = new ArrayList<>();
         maListeobj = new ArrayList<>();
         nomsUtilises = new HashSet<>();
+    }
+
+    public int getLongueur() {
+        return longueur;
+    }
+
+    public int getLargeur() {
+        return largeur;
+    }
+
+    public void setLongueur(int longueur) {
+        this.longueur = longueur;
+    }
+
+    public void setLargeur(int largeur) {
+        this.largeur = largeur;
     }
 
     public Joueur getJoueur() {
@@ -164,7 +181,7 @@ public class World {
             Archer a = new Archer();
             definirStatsAlea(a);
             do {
-                newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur));
             } while (estOccupee(newpos));
             a.setPos(newpos);
             maListePers.add(a);
@@ -175,7 +192,7 @@ public class World {
             Paysan p = new Paysan();
             definirStatsAlea(p);
             do {
-                newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur));
             } while (estOccupee(newpos));
             p.setPos(newpos);
             maListePers.add(p);
@@ -186,7 +203,7 @@ public class World {
             Lapin l = new Lapin();
             definirStatsAlea(l);
             do {
-                newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur));
             } while (estOccupee(newpos));
             l.setPos(newpos);
             maListeMons.add(l);
@@ -197,7 +214,7 @@ public class World {
             Guerrier g = new Guerrier();
             definirStatsAlea(g);
             do {
-                newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur));
             } while (estOccupee(newpos));
             g.setPos(newpos);
             maListePers.add(g);
@@ -208,7 +225,7 @@ public class World {
             Loup l = new Loup();
             definirStatsAlea(l);
             do {
-                newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
             } while (estOccupee(newpos));
             l.setPos(newpos);
             maListeMons.add(l);
@@ -219,7 +236,7 @@ public class World {
             String nomPotion = "Potion" + (i + 1);
             int ptVieRendus = 10 + rand.nextInt(41); // 10 à 50 PV
             do {
-                newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
             } while (estOccupee(newpos));
             PotionSoin p = new PotionSoin(nomPotion, newpos, ptVieRendus);
             maListeobj.add(p);
@@ -230,7 +247,7 @@ public class World {
             String nomEpee = "Epée" + (i + 1);
             int bonusAtt = 5 + rand.nextInt(16); // 5 à 20
             do {
-                newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
             } while (estOccupee(newpos));
             Epee e = new Epee(nomEpee, newpos, bonusAtt);
             maListeobj.add(e);
@@ -242,7 +259,7 @@ public class World {
             int dureeEffet = 2 + rand.nextInt(5); // 5 à 20
             int malusDefense = 10 + rand.nextInt(32); // 10 à 30
             do {
-                newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
             } while (estOccupee(newpos));
             ChampignonPourri e = new ChampignonPourri(nomChampignonPourri, newpos, dureeEffet, malusDefense);
             maListeobj.add(e);
@@ -254,7 +271,7 @@ public class World {
         int dureeEffet  = 2 + rand.nextInt(5); // 5 à 20
         int bonusDegAtt = 10 + rand.nextInt(32); // 10 à 30
         do {
-            newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+            newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
         } while (estOccupee(newpos));
         FeuilleEpinart e = new FeuilleEpinart(nomFeuilleEpinart, newpos, dureeEffet, bonusDegAtt);
         maListeobj.add(e);

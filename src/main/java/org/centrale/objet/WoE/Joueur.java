@@ -253,7 +253,7 @@ public class Joueur {
             int persoY = persoJoueur.getPos().getY();
 
             int dx = 0, dy = 0;
-            if (choix=='z' && persoY<World.TAILLE_PAR_DEFAUT-1) {
+            if (choix=='z' && persoY<monde.getLargeur()-1) {
                 dy = 1;
             }
             else if (choix=='s' && persoY>0) {
@@ -262,7 +262,7 @@ public class Joueur {
             else if (choix=='q' && persoX>0) {
                 dx = -1;
             }
-            else if (choix=='d' && persoX<World.TAILLE_PAR_DEFAUT-1) {
+            else if (choix=='d' && persoX<monde.getLargeur()-1) {
                 dx = 1;
             }
             else {
