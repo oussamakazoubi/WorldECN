@@ -6,14 +6,12 @@ import java.sql.SQLException;
 
 public class DatabaseManager {
 
-    // === Modify these for your local setup ===
     private static final String URL = "jdbc:postgresql://appli-pfe.ec-nantes.fr:5432/infosi_05";
     private static final String USER = "infosi_05";
     private static final String PASSWORD = "frieren";
 
     private static Connection connection = null;
 
-    // Get (or create) a single shared connection
     public static Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {

@@ -7,13 +7,10 @@ import java.sql.Statement;
 public class TestReadDatabase {
     public static void main(String[] args) {
         try {
-            // Get the connection from your DatabaseManager
             Connection conn = DatabaseManager.getConnection();
 
-            // Create a simple statement
             Statement stmt = conn.createStatement();
 
-            // Query something small — for example all players
             String sql = "SELECT idJoueur, pseudo, email FROM Joueur";
             ResultSet rs = stmt.executeQuery(sql);
 
