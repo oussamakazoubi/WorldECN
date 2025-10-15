@@ -19,8 +19,7 @@ public class Joueur {
     private String pseudo;
     private String email;
     private int mdp;
-    private String persoChoisi;
-    private ArrayList<Class<? extends Personnage>> PersoJouable;
+    private static final ArrayList<Class<? extends Personnage>> PersoJouable = new ArrayList<>(Arrays.asList(Guerrier.class, Archer.class));
     private Personnage persoJoueur;
     private ArrayList<Objet> inventaire;
 
@@ -29,23 +28,24 @@ public class Joueur {
         pseudo = "";
         email = "";
         mdp = 0;
-        PersoJouable = new ArrayList<>(Arrays.asList(Guerrier.class, Archer.class));
+        inventaire = new ArrayList<>();
     }
 
-    public Joueur(String nom, String pseudo, String email, int mdp, ArrayList<Class<? extends Personnage>> PersoJouable) {
+    public Joueur(String nom, String pseudo, String email, int mdp) {
+        this();
         this.nom = nom;
         this.pseudo = pseudo;
         this.email = email;
         this.mdp = mdp;
-        this.PersoJouable = PersoJouable;
     }
 
     public Joueur(Joueur j) {
+        this();
         this.nom = j.nom;
         this.pseudo = j.pseudo;
         this.email = j.email;
         this.mdp = j.mdp;
-        this.PersoJouable = j.PersoJouable;
+        this.inventaire = j.inventaire;
     }
 
     public Personnage getPersoJoueur() {
@@ -68,14 +68,12 @@ public class Joueur {
         return PersoJouable;
     }
 
-    public void setPersoJouable(ArrayList<Class<? extends Personnage>> persoJouable) {
-        PersoJouable = persoJouable;
-    }
 
     public void ChoisirPersonnage(World monde) {
         inventaire = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
         Personnage perso = null;
+        String persoChoisi;
 
         while (perso == null) {
             System.out.println("Rentrer un personnage jouable :");
@@ -89,6 +87,7 @@ public class Joueur {
                         perso = cl.getDeclaredConstructor().newInstance();
                         monde.definirStatsAlea(perso);
                         perso.setNom(NomPersoChoisi);
+                        this.persoJoueur = perso;
                         monde.maListePers.add(perso);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -102,38 +101,45 @@ public class Joueur {
             }
     }
 
-    this.persoJoueur = new Personnage(perso);
 }
 
 
     private void combattreJoueur(World monde) {
         ArrayList<Creature> cibles = monde.ChercherCibles(this.persoJoueur);
+        int taillesCibles = cibles.size();
 
         if (cibles.isEmpty()) {
             System.out.println("Aucune cible à portée !");
             return;
         }
 
+        String msg = "";
         System.out.println("=== Cibles disponibles ===");
-        for (int i = 0; i < cibles.size(); i++) {
+        for (int i = 0; i < taillesCibles; i++) {
             Creature c = cibles.get(i);
-            String msg = "";
             if (c instanceof Personnage){
-                msg = " - " + ((Personnage) c).getNom();
+                msg = msg + ((Integer) (i +1)).toString() + " - " + ((Personnage) c).getNom();
             }
-            msg = msg + " (" + c.getClass().getSimpleName() +
+            else {
+                msg = msg + ((Integer) (i + 1)).toString() + " - ";
+            }
+            msg = "\n" + msg + "  (" + c.getClass().getSimpleName() +
                     ") à la position " + c.getPos().toString();
-            System.out.println(msg);
         }
+        msg = msg + "\n" + ((Integer) (taillesCibles+1)).toString() + " -  Revenir au menu precedent.";
+        System.out.println(msg);
 
         Scanner input = new Scanner(System.in);
         System.out.print("Choisissez la cible à attaquer (numéro) : ");
         int choixCible=0;
         try {
             choixCible = input.nextInt();
-            if (choixCible < 1 || choixCible > cibles.size()) {
+            if (choixCible < 1 || choixCible > cibles.size() + 1) {
                 System.out.println("Numéro invalide. Aucun combat effectué.");
                 combattreJoueur(monde);
+            }
+            else if (choixCible == cibles.size() + 1) {
+                return;
             }
         } catch (Exception e) {
             System.out.println("Entrée invalide. Aucun combat effectué.");
@@ -146,8 +152,10 @@ public class Joueur {
             this.persoJoueur.getClass()
                     .getMethod("combattre", Creature.class)
                     .invoke(this.persoJoueur, cible);
+
         } catch (Exception e) {
             System.out.println("Ce personnage ne peut pas combattre !");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -162,22 +170,26 @@ public class Joueur {
         String choix;
 
         do {
-            System.out.println("Choisir action : 1=deplacer, 2=combattre, 3=inventaire, 4=quitter");
+            System.out.println("Choisir action : 1=deplacer, 2=combattre, 3=Tour Suivante, 4=Inventaire , 5=Afficher monde, 6=quitter");
             choix = scanner.nextLine();
 
             switch (choix) {
-                case "1", "deplacer" -> this.persoJoueur.deplace(monde);
+                case "1", "deplacer" -> this.deplaceJoueur(monde);
 
                 case "2", "combattre" -> this.combattreJoueur(monde);
 
-                case "3", "Iventaire" -> utiliserObjetInventaire();
+                case "3", "Tour Suivante" -> monde.tourDeJeu();
 
-                case "4", "quitter" -> System.out.println("Fin de jeu");
+                case "4", "Iventaire" -> utiliserObjetInventaire();
+
+                case "5", "Afficher monde" -> monde.affiche();
+
+                case "6", "quitter" -> System.out.println("Fin de jeu");
 
                 default -> System.out.println("Refais ton choix !");
             }
 
-        } while (!choix.equals("4"));
+        } while (!choix.equals("6"));
 
         monde.chercherObjet(this.persoJoueur);
     }
@@ -226,8 +238,9 @@ public class Joueur {
 
 
 
-        public void deplaceJoueur() {
-            System.out.println("\nChoisissez une direction pour vous déplacer :");
+        public void deplaceJoueur(World monde) {
+            System.out.println("\nVotre position est : " + persoJoueur.getPos().toString());
+            System.out.println("Choisissez une direction pour vous déplacer :");
             System.out.println("  Z  : haut");
             System.out.println("  S  : bas");
             System.out.println("  Q  : gauche");
@@ -254,10 +267,17 @@ public class Joueur {
             }
             else {
                 System.out.println("Entrée invalide. Vous restez sur place.");
-                deplaceJoueur();
+                deplaceJoueur(monde);
+                return;
             }
 
+            Point2D checkPosition = new Point2D(persoX+dx, persoY+dy);
+            if (monde.estOccupee(checkPosition)) {
+                deplaceJoueur(monde);
+                return;
+            }
             persoJoueur.getPos().translate(dx, dy);
+            monde.chercherObjet(this.persoJoueur);
             System.out.println(persoJoueur.getNom() + " se déplace en " + persoJoueur.getPos().toString());
         }
 

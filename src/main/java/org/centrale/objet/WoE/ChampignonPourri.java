@@ -16,6 +16,11 @@ public class ChampignonPourri extends Nourriture {
         this.malusDefense = 3;
     }
 
+    public ChampignonPourri(String nom, Point2D position, int dureeEffet, int malusDefense) {
+        super(nom, position, dureeEffet);
+        this.malusDefense = malusDefense;
+    }
+
     @Override
     public void utiliserObjet(Personnage p) {
       

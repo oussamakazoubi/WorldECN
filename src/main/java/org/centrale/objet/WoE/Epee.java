@@ -13,7 +13,7 @@ package org.centrale.objet.WoE;
  *
  * @author Imane
  */
-public class Epée extends Objet {
+public class Epee extends Objet {
 
     /** Bonus de dégâts d'attaque apporté par l'épée. */
     private int bonusAtt;
@@ -22,7 +22,7 @@ public class Epée extends Objet {
      * Constructeur par défaut.
      * Crée une épée sans bonus d'attaque.
      */
-    public Epée() {
+    public Epee() {
         super();
         this.bonusAtt = 0;
     }
@@ -34,7 +34,7 @@ public class Epée extends Objet {
      * @param position position de l'épée dans le monde
      * @param bonusAtt bonus de dégâts d'attaque conféré
      */
-    public Epée(String nom, Point2D position, int bonusAtt) {
+    public Epee(String nom, Point2D position, int bonusAtt) {
         super(nom, position);
         this.bonusAtt = bonusAtt;
     }
@@ -44,7 +44,7 @@ public class Epée extends Objet {
      *
      * @param e épée à copier
      */
-    public Epée(Epée e) {
+    public Epee(Epee e) {
         super(e);
         this.bonusAtt = e.bonusAtt;
     }

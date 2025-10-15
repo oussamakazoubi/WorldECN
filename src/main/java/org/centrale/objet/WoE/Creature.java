@@ -194,12 +194,12 @@ public class Creature implements Deplacable{
      */
     @Override
     public String toString() {
-        return "Points de vie : " + this.ptVie + "\n"
-                + "Dégâts : " + this.degAtt + "\n"
-                + "Points de parade : " + this.ptPar + "\n"
-                + "Chances d’attaque : " + this.pageAtt + "\n"
-                + "Chances de parade : " + this.pagePar + "\n"
-                + "Position : [" + this.pos.getX() + ", " + this.pos.getY() + "]";
+        return "Points de vie : " + this.ptVie
+                + "  Dégâts : " + this.degAtt
+                + "  Points de parade : " + this.ptPar
+                + "  Chances d’attaque : " + this.pageAtt
+                + "  Chances de parade : " + this.pagePar
+                + "  Position : [" + this.pos.getX() + ", " + this.pos.getY() + "]";
     }
 
     /**

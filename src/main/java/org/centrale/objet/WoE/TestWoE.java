@@ -53,6 +53,7 @@ public class TestWoE {
         return somme;
     }
 
+
     /**
      * Calcule la somme des points de vie des personnages dans la liste via un itérateur.
      * 
@@ -108,6 +109,46 @@ public class TestWoE {
 
         }*/
     public static void main(String[] args) {
+
+
+        // === 1. Créer le monde ===
+        System.out.println("=== Initialisation du Monde ===");
+        World monde = new World();
+
+        // Génération aléatoire de créatures et objets
+        // (Archers, Paysans, Lapins, Guerriers, Loups, Potions, Épées)
+        monde.creerMondeAlea(
+                2, // nbArchers
+                2, // nbPaysans
+                2, // nbLapins
+                2, // nbGuerriers
+                2, // nbLoups
+                3, // nbPotions
+                2, // nbÉpées
+                2, // nbChampignonPourri
+                1 // FeuilleEpinart
+        );
+
+        System.out.println("=== Monde généré ===");
+        monde.affiche();
+
+        // === 2. Créer un joueur humain ===
+        Joueur joueur = new Joueur("Imane", "Heroine", "imane@woe.com", 1234);
+        monde.setJoueur(joueur);
+
+        // === 3. Choisir un personnage jouable ===
+        System.out.println("\n=== Création du personnage joueur ===");
+        joueur.ChoisirPersonnage(monde);
+        System.out.println("Votre personnage : ");
+        joueur.getPersoJoueur().affiche();
+
+        // === 4. Tester les actions du joueur ===
+        System.out.println("\n=== Début du jeu ===");
+        joueur.choisirPreference(monde);
+
+        System.out.println("\n=== Fin du programme ===");
+
+        /*
         Joueur j=new Joueur();
         World monde= new World();
         monde.creerMondeAlea(2, 3, 3, 5, 2, 1,  1);
@@ -182,8 +223,11 @@ public class TestWoE {
     // méthode récursive sans fin
     public static void recursive() {
         recursive(); // s'appelle elle-même sans condition -> StackOverflowError
+
+
+         */
     
-}
+    }
 }
 
 

@@ -16,11 +16,10 @@ import java.util.*;
  * @author Imane
  */
 public class World {
-    
-    protected ArrayList<Nourriture> maListeNour;
+
 
     /** Taille de la grille par défaut (50x50). */
-    public static final int TAILLE_PAR_DEFAUT = 50;
+    public static final int TAILLE_PAR_DEFAUT = 7;
 
     /** Liste des personnages présents dans le monde. */
     protected ArrayList<Personnage> maListePers;
@@ -46,7 +45,6 @@ public class World {
         maListeMons = new ArrayList<>();
         maListeobj = new ArrayList<>();
         nomsUtilises = new HashSet<>();
-        maListeNour = new ArrayList<>();
     }
 
     public Joueur getJoueur() {
@@ -81,6 +79,7 @@ public class World {
             c.setPtPar(10 + rand.nextInt(11));       // 10–20
             c.setPageAtt(50 + rand.nextInt(26));     // 50–75 %
             c.setPagePar(20 + rand.nextInt(11));     // 20–30 %
+            ((Archer) c).setNbFleches(10 +  rand.nextInt(11));  //10-20
             ((Personnage) c).setDistAttMax(3 + rand.nextInt(3)); // 3–5
 
             // === PAYSAN ===
@@ -156,7 +155,7 @@ public class World {
      * @param nbEpee     nombre d'épées à générer
      */
     public void creerMondeAlea(int nbArcher, int nbPaysan, int nbLapin,
-                               int nbGuerrier, int nbLoup, int nbPotion, int nbEpee) {
+                               int nbGuerrier, int nbLoup, int nbPotion, int nbEpee, int nbChamp, int nbFeuille) {
         Random rand = new Random();
         Point2D newpos;
 
@@ -233,10 +232,34 @@ public class World {
             do {
                 newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
             } while (estOccupee(newpos));
-            Epée e = new Epée(nomEpee, newpos, bonusAtt);
+            Epee e = new Epee(nomEpee, newpos, bonusAtt);
             maListeobj.add(e);
         }
+
+        // ChampignonPourri
+        for (int i = 0; i < nbChamp; i++) {
+            String nomChampignonPourri= "ChampignonPourri" + (i + 1);
+            int dureeEffet = 2 + rand.nextInt(5); // 5 à 20
+            int malusDefense = 10 + rand.nextInt(32); // 10 à 30
+            do {
+                newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+            } while (estOccupee(newpos));
+            ChampignonPourri e = new ChampignonPourri(nomChampignonPourri, newpos, dureeEffet, malusDefense);
+            maListeobj.add(e);
+        }
+
+    // FeuilleEpinart
+        for (int i = 0; i < nbFeuille; i++) {
+        String nomFeuilleEpinart= "FeuilleEpinart" + (i + 1);
+        int dureeEffet  = 2 + rand.nextInt(5); // 5 à 20
+        int bonusDegAtt = 10 + rand.nextInt(32); // 10 à 30
+        do {
+            newpos = new Point2D(rand.nextInt(TAILLE_PAR_DEFAUT), rand.nextInt(TAILLE_PAR_DEFAUT));
+        } while (estOccupee(newpos));
+        FeuilleEpinart e = new FeuilleEpinart(nomFeuilleEpinart, newpos, dureeEffet, bonusDegAtt);
+        maListeobj.add(e);
     }
+}
 
 
 
@@ -262,31 +285,23 @@ public class World {
      * @param p la créature concernée
      */
     public void chercherObjet(Personnage p) {
-        for (Objet o : maListeobj) { // Boucle for-each
+        Iterator<Objet> it = maListeobj.iterator();
+        while (it.hasNext()) {
+            Objet o = it.next();
             if (o.getPosition().equals(p.getPos())) {
-                if (p==joueur.getPersoJoueur()){
+                if (p == joueur.getPersoJoueur()) {
                     joueur.getInventaire().add(o);
-                    System.out.println(o.getNom()+ " est ramasse ");
+                    System.out.println(o.getNom() + " est ramassé ");
+                } else {
+                    o.utiliserObjet(p);
+                    System.out.println(o.getNom() + " est utilisé ");
                 }
-                o.utiliserObjet(p);
-                System.out.println(o.getNom() + " est utilise ");
                 if (!(o instanceof NuageToxique)) {
-                    maListeobj.remove(o);
+                    it.remove();
                 }
             }
         }
-    
-        for (Nourriture n : maListeNour) { // Boucle for-each
-            if (n.getPosition().equals(p.getPos())) {
-                n.utiliserObjet(p);
-                p.getUtilisables().add(n);
-                p.mettreAJourEffets();
-                n.annulerEffet(p);
-                
-                }
-               
-            }
-        }
+    }
 
     public ArrayList<Creature> ChercherCibles(Personnage p) {
         ArrayList<Creature> maListeCreatures = new ArrayList<>();
@@ -296,7 +311,7 @@ public class World {
         for (Creature cible : maListeCreatures) {
             double dist = p.getPos().distance(cible.getPos());
             double distMax = p.getDistAttMax();
-            if (dist <= distMax) {
+            if (dist <= distMax  && p!=cible) {
                 cibles.add(cible);
             }
         }
@@ -339,7 +354,6 @@ public class World {
                     if (c1 instanceof Combattant) {
                         ((Combattant) c1).combattre(c2);
                     }
-
                 }
             }
         }
