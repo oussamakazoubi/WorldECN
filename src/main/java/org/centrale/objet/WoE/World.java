@@ -19,8 +19,8 @@ public class World {
 
 
     /** Taille de la grille par défaut (50x50). */
-    public int longueur;
-    public int largeur;
+    private int longueur;
+    private int largeur;
 
     /** Liste des personnages présents dans le monde. */
     protected ArrayList<Personnage> maListePers;
@@ -46,6 +46,31 @@ public class World {
         maListeMons = new ArrayList<>();
         maListeobj = new ArrayList<>();
         nomsUtilises = new HashSet<>();
+    }
+
+
+    public ArrayList<Personnage> getMaListePers() {
+        return maListePers;
+    }
+
+    public ArrayList<Monstre> getMaListeMons() {
+        return maListeMons;
+    }
+
+    public ArrayList<Objet> getMaListeobj() {
+        return maListeobj;
+    }
+
+    public void setMaListePers(ArrayList<Personnage> maListePers) {
+        this.maListePers = maListePers;
+    }
+
+    public void setMaListeMons(ArrayList<Monstre> maListeMons) {
+        this.maListeMons = maListeMons;
+    }
+
+    public void setMaListeobj(ArrayList<Objet> maListeobj) {
+        this.maListeobj = maListeobj;
     }
 
     public int getLongueur() {
