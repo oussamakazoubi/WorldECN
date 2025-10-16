@@ -6,9 +6,9 @@ public class NuageToxique extends Objet implements Deplacable, Combattant {
 
     private int degAtt;
     private int distAttMax;
-    private Point2D pos;
 
-    public NuageToxique(int degAtt, int distAttMax) {
+    public NuageToxique(String nom, Point2D pos, int degAtt, int distAttMax) {
+        super(nom,pos);
         this.degAtt = degAtt;
         this.distAttMax = distAttMax;
     }
@@ -21,9 +21,6 @@ public class NuageToxique extends Objet implements Deplacable, Combattant {
         return distAttMax;
     }
 
-    public Point2D getPos() {
-        return pos;
-    }
 
     public void setDegAtt(int degAtt) {
         this.degAtt = degAtt;
@@ -33,15 +30,13 @@ public class NuageToxique extends Objet implements Deplacable, Combattant {
         this.distAttMax = distAttMax;
     }
 
-    public void setPos(Point2D pos) {
-        this.pos = pos;
-    }
+
 
     @Override
     public void combattre(Creature c) {
         Random rand = new Random();
         int degatsSubis = 0;
-        double dist = this.getPos().distance(c.getPos());
+        double dist = this.getPosition().distance(c.getPos());
         System.out.println("Tentative de combat ");
         System.out.println("L’ennemi a " + c.getPtVie() + " points de vie.");
 
@@ -88,6 +83,6 @@ public class NuageToxique extends Objet implements Deplacable, Combattant {
         int dx = rand.nextInt(3) - 1;
         int dy = rand.nextInt(3) - 1;
         if (dx==0 && dy==0) this.deplace();
-        else this.getPos().translate(dx, dy);
+        else this.getPosition().translate(dx, dy);
     }
 }
