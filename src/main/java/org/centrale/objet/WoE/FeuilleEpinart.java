@@ -29,12 +29,6 @@ public class FeuilleEpinart extends Nourriture {
         this.bonusDegAtt = 2;
     }
 
-
-    public int getBonusDegAtt() {
-        return bonusDegAtt;
-    }
-
-
     public void utiliserObjet(Personnage p) {
       
         if (getEstActive()==false){
@@ -47,9 +41,12 @@ public class FeuilleEpinart extends Nourriture {
                 System.out.println("L'effet de la feuille d’épinard sur " + p.getNom() + " s’est dissipé.");
                 p.setDegAtt(p.getDegAtt() - bonusDegAtt);
                 setEstActive(false);
-    }
+            }
 
-}
+   
+
+  
+        }
     
 
    

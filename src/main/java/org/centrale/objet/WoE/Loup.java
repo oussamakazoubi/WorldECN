@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer;
 import java.util.Random;
 
 /**
@@ -49,6 +49,27 @@ public class Loup extends Monstre implements Combattant{
      */
     public Loup(Loup l) {
         super(l);
+    }
+    
+    /**
+     * Constructeur à partir d'une ligne de sauvegarde texte.
+     * <p>Exemple de ligne :
+     * <pre>
+     * Loup 30 80 50 50 50 19 3
+     * </pre>
+     * </p>
+     */
+    public Loup(String ligne) {
+        StringTokenizer st = new StringTokenizer(ligne, " ");
+        st.nextToken(); // saute "Loup"
+        this.setPtVie(Integer.parseInt(st.nextToken()));
+        this.setDegAtt(Integer.parseInt(st.nextToken()));
+        this.setPtPar(Integer.parseInt(st.nextToken()));
+        this.setPageAtt(Integer.parseInt(st.nextToken()));
+        this.setPagePar(Integer.parseInt(st.nextToken()));
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
+        this.setPos(new Point2D(x, y));
     }
 
     /**
@@ -104,5 +125,19 @@ public class Loup extends Monstre implements Combattant{
             }
         }
         else System.out.println("\n Ennemi trop éloigné pour le combat !");
+    }
+    
+    /**
+     * Retourne le texte de sauvegarde correspondant à ce loup.
+     * <p>Format :
+     * <pre>
+     * Loup ptVie degAtt ptPar pageAtt pagePar posX posY
+     * </pre>
+     * </p>
+     */
+    public String getTexteSauvegarde() {
+        return "Loup " + getPtVie() + " " + getDegAtt() + " " + getPtPar() + " " +
+               getPageAtt() + " " + getPagePar() + " " +
+               getPos().getX() + " " + getPos().getY();
     }
 }

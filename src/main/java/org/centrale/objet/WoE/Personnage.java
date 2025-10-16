@@ -6,7 +6,7 @@
 package org.centrale.objet.WoE;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.util.Iterator;
 
 /**
@@ -75,6 +75,16 @@ public class Personnage extends Creature {
         super(perso);
         this.nom = perso.nom;
         this.distAttMax = perso.distAttMax;
+    }
+    
+      /** Constructeur depuis une ligne texte (pour le chargement de sauvegarde) */
+    public Personnage(String ligne) {
+        StringTokenizer st = new StringTokenizer(ligne, " ");
+        st.nextToken(); // saute le mot-clé "Personnage" ou "Guerrier"/"Archer"/etc.
+        this.nom = st.nextToken();
+        this.distAttMax = Integer.parseInt(st.nextToken());
+        chargerDepuisTokenizer(st); // méthode utilitaire dans Creature
+        Utilisables = new ArrayList<>();
     }
 
     public ArrayList<Nourriture> getUtilisables() {
@@ -175,6 +185,25 @@ public class Personnage extends Creature {
                 }
             }
         }
+    }
+    
+    // --- Sauvegarde ---
+    /**
+     * Retourne le texte de sauvegarde commun à tous les personnages.
+     * Format : "ptVie degAtt ptPar pageAtt pagePar posX posY"
+     */
+    public String getTexteSauvegardeCommun() {
+        return getPtVie() + " " + getDegAtt() + " " + getPtPar() + " " +
+               getPageAtt() + " " + getPagePar() + " " +
+               getPos().getX() + " " + getPos().getY();
+    }
+
+    /**
+     * Retourne le texte de sauvegarde complet pour un personnage générique.
+     * Les sous-classes peuvent surcharger cette méthode.
+     */
+    public String getTexteSauvegarde() {
+        return "Personnage " + nom + " " + distAttMax + " " + getTexteSauvegardeCommun();
     }
     
     }

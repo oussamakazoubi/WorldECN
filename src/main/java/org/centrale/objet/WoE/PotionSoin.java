@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer;
 /**
  * Représente une potion de soin que les créatures peuvent ramasser dans le monde.
  * <p>
@@ -47,6 +47,21 @@ public class PotionSoin extends Objet {
     public PotionSoin(PotionSoin pS) {
         super(pS);
         this.ptVieRendus = pS.ptVieRendus;
+    }
+    
+     /**
+     * Constructeur à partir d'une ligne texte (chargement depuis fichier).
+     * Exemple :
+     * PotionSoin potionVie 20 5 8
+     */
+    public PotionSoin(String ligne) {
+        StringTokenizer st = new StringTokenizer(ligne, " ");
+        st.nextToken(); // saute "PotionSoin"
+        this.setNom(st.nextToken());
+        this.ptVieRendus = Integer.parseInt(st.nextToken());
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
+        this.setPosition(new Point2D(x, y));
     }
 
     /**
@@ -97,5 +112,15 @@ public class PotionSoin extends Objet {
     @Override
     public void affiche() {
         System.out.println(this);
+    }
+    
+    /**
+     * Retourne le texte de sauvegarde correspondant à cette potion.
+     * Format :
+     * PotionSoin nom ptVieRendus posX posY
+     */
+    public String getTexteSauvegarde() {
+        return "PotionSoin " + getNom() + " " + ptVieRendus + " " +
+               getPosition().getX() + " " + getPosition().getY();
     }
 }

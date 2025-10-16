@@ -1,3 +1,4 @@
+/*
 package database;
 
 public class TestCreatureDB {
@@ -29,3 +30,4 @@ public class TestCreatureDB {
         }
     }
 }
+*/

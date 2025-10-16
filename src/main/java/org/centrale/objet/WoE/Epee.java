@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer;
 /**
  * Représente une épée que les créatures peuvent ramasser.
  * <p>
@@ -47,6 +47,21 @@ public class Epee extends Objet {
     public Epee(Epee e) {
         super(e);
         this.bonusAtt = e.bonusAtt;
+    }
+    
+    /**
+     * Constructeur à partir d'une ligne texte.
+     * Exemple :
+     * Epee Excalibur 15 12 8
+     */
+    public Epee(String ligne) {
+        StringTokenizer st = new StringTokenizer(ligne, " ");
+        st.nextToken(); // saute "Epee"
+        this.setNom(st.nextToken());
+        this.bonusAtt = Integer.parseInt(st.nextToken());
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
+        this.setPosition(new Point2D(x, y));
     }
 
     /**
@@ -97,5 +112,15 @@ public class Epee extends Objet {
     @Override
     public void affiche() {
         System.out.println(this);
+    }
+    
+    /**
+     * Retourne le texte de sauvegarde correspondant à cette épée.
+     * Format :
+     * Epee nom bonusAtt posX posY
+     */
+    public String getTexteSauvegarde() {
+        return "Epee " + getNom() + " " + bonusAtt + " " +
+               getPosition().getX() + " " + getPosition().getY();
     }
 }
