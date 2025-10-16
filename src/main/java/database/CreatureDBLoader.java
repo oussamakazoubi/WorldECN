@@ -1,6 +1,6 @@
 package database;
 
-import org.centrale.objet.WoE.;
+import org.centrale.objet.WoE.*;
 import java.sql.*;
 
 /**
@@ -56,7 +56,13 @@ public class CreatureDBLoader {
                 loadStats(conn, idCreature, creature);
 
                 // 3️⃣ Add to the world
-                world.addElement(creature);
+                if (creature instanceof Personnage){
+                    world.getMaListePers().add((Personnage) creature);
+                }
+
+                if (creature instanceof Monstre){
+                    world.getMaListeMons().add((Monstre) creature);
+                }
 
                 System.out.println("Loaded " + creature.getClass().getSimpleName()
                         + " (" + (nom != null ? nom : race) + ") @ " + pos);
@@ -66,22 +72,59 @@ public class CreatureDBLoader {
 
     /** Creates the proper Personnage subclass (Guerrier, Archer, Paysan). */
     private static Creature createPersonnage(String nom, String metier, Point2D pos) {
-        if (metier == null) return new Personnage(nom, pos);
-        return switch (metier.toLowerCase()) {
-            case "guerrier" -> new Guerrier(nom, pos);
-            case "archer" -> new Archer(nom, pos);
-            case "paysan" -> new Paysan(nom, pos);
-            default -> new Personnage(nom, pos);
-        };
+        if (metier == null) {
+            Personnage P = new Personnage();
+            P.setNom(nom);
+            P.setPos(pos);
+            return P;
+        }
+        switch (metier.toLowerCase()) {
+            case "guerrier" -> {
+                Guerrier P = new Guerrier();
+                P.setNom(nom);
+                P.setPos(pos);
+                return P;
+            }
+            case "archer" -> {
+                Archer P = new Archer();
+                P.setNom(nom);
+                P.setPos(pos);
+                return P;
+            }
+            case "paysan" -> {
+                Paysan P = new Paysan();
+                P.setNom(nom);
+                P.setPos(pos);
+                return P;
+            }
+            default -> {
+                Personnage P = new Personnage();
+                P.setNom(nom);
+                P.setPos(pos);
+                return P;
+            }
+        }
     }
 
     /** Creates the proper Monstre subclass (Loup, Lapin, generic). */
     private static Creature createMonstre(String race, Point2D pos) {
-        return switch (race.toLowerCase()) {
-            case "loup" -> new Loup(pos);
-            case "lapin" -> new Lapin(pos);
-            default -> new Monstre(pos);
-        };
+        switch (race.toLowerCase()) {
+            case "loup" -> {
+                Loup M = new Loup();
+                M.setPos(pos);
+                return M;
+            }
+            case "lapin" -> {
+                Lapin M = new Lapin();
+                M.setPos(pos);
+                return M;
+            }
+            default -> {
+                Monstre M = new Monstre();
+                M.setPos(pos);
+                return M;
+            }
+        }
     }
 
     /** Restores all attributes from CaracValues into the Creature object. */
@@ -93,7 +136,7 @@ public class CreatureDBLoader {
 
             while (rs.next()) {
                 int idCarac = rs.getInt("idCarac");
-                double val = rs.getDouble("caracValue");
+                int val = rs.getInt("caracValue");
 
                 switch (idCarac) {
                     case 1 -> c.setPtVie((int) val);

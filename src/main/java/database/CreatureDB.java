@@ -1,7 +1,7 @@
 package database;
 
 import java.sql.*;
-import org.centrale.objet.WoE.;
+import org.centrale.objet.WoE.*;
 
 /**
  * Handles saving of all Creature instances (Personnage and Monstre subclasses)

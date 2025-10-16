@@ -21,6 +21,14 @@ public class ChampignonPourri extends Nourriture {
         this.malusDefense = malusDefense;
     }
 
+    public int getMalusDefense() {
+        return malusDefense;
+    }
+
+    public void setMalusDefense(int malusDefense) {
+        this.malusDefense = malusDefense;
+    }
+
     @Override
     public void utiliserObjet(Personnage p) {
       
