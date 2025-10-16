@@ -54,7 +54,12 @@ public class ObjetDB {
      * Uses CaracObjet rows already defined for each TypeObjet.
      */
     private static void saveAllAttributes(int idObjet, int idTypeObj, Objet objet) throws SQLException {
-        String sqlCarac = "SELECT idCaracObjet, libelleCarac FROM CaracObjet WHERE idTypeObjet = ?";
+        String sqlCarac = """
+                        SELECT idCaracObjet, libelleCarac
+                        FROM CaracObjet
+                        WHERE idTypeObjet = ? 
+                           OR libelleCarac = 'dureeEffet'
+                    """;
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sqlCarac)) {
 
