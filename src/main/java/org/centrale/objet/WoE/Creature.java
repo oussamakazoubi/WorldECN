@@ -4,7 +4,7 @@
  */
 
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer; 
 import java.util.Random;
 
 /**
@@ -79,6 +79,21 @@ public class Creature implements Deplacable{
     public Creature() {
         this(0, 0, 0, 0, 0, new Point2D(0, 0));
     }
+    
+    /**
+ * Initialise les attributs communs d'une créature à partir d'un StringTokenizer.
+ * Utilisé par les constructeurs des sous-classes lors du chargement.
+ */
+protected void chargerDepuisTokenizer(StringTokenizer st) {
+    this.ptVie = Integer.parseInt(st.nextToken());
+    this.degAtt = Integer.parseInt(st.nextToken());
+    this.ptPar = Integer.parseInt(st.nextToken());
+    this.pageAtt = Integer.parseInt(st.nextToken());
+    this.pagePar = Integer.parseInt(st.nextToken());
+    int x = Integer.parseInt(st.nextToken());
+    int y = Integer.parseInt(st.nextToken());
+    this.pos = new Point2D(x, y);
+}
 
     // --- Getters et Setters ---
 
@@ -208,4 +223,15 @@ public class Creature implements Deplacable{
     public void affiche() {
         System.out.println(this);
     }
+    
+    /**
+ * Retourne la partie commune de la ligne de sauvegarde pour une créature.
+ * Ex: "100 50 20 60 30 10 5"
+ */
+protected String getTexteSauvegardeCommun() {
+    return ptVie + " " + degAtt + " " + ptPar + " " +
+           pageAtt + " " + pagePar + " " +
+           pos.getX() + " " + pos.getY();
+}
+
 }

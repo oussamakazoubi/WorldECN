@@ -4,7 +4,7 @@
  */
 
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer;
 /**
  * La classe {@code Paysan} représente un personnage non combattant du monde.
  * <p>
@@ -59,7 +59,50 @@ public class Paysan extends Personnage {
     public Paysan(Paysan p) {
         super(p);
     }
+    
+    /**
+     * Constructeur à partir d'une ligne de sauvegarde texte.
+     * Exemple de ligne :
+     * Archer robin 75 20 5 75 30 5 15 5 20
+     */
+     /**
+     * Constructeur à partir d'une ligne de sauvegarde texte.
+     * <p>Exemple de ligne : 
+     * <pre>
+     * Paysan peon 25 5 30 0 40 0 3 6
+     * </pre>
+     * </p>
+     */
+    public Paysan(String ligne) {
+        StringTokenizer st = new StringTokenizer(ligne, " ");
+        st.nextToken(); // saute "Paysan"
+        this.setNom(st.nextToken());
+        this.setPtVie(Integer.parseInt(st.nextToken()));
+        this.setDegAtt(Integer.parseInt(st.nextToken()));
+        this.setPtPar(Integer.parseInt(st.nextToken()));
+        this.setPageAtt(Integer.parseInt(st.nextToken()));
+        this.setPagePar(Integer.parseInt(st.nextToken()));
+        this.setDistAttMax(Integer.parseInt(st.nextToken()));
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
+        this.setPos(new Point2D(x, y));
+    }
+
+    /**
+     * Retourne la ligne de sauvegarde représentant ce paysan.
+     * <p>Format : 
+     * <pre>
+     * Paysan nom ptVie degAtt ptPar pageAtt pagePar distAttMax posX posY
+     * </pre>
+     * </p>
+     */
+    public String getTexteSauvegarde() {
+        return "Paysan " + getNom() + " " + getPtVie() + " " + getDegAtt() + " " +
+               getPtPar() + " " + getPageAtt() + " " + getPagePar() + " " +
+               getDistAttMax() + " " + getPos().getX() + " " + getPos().getY();
+    }
 }
+
 
 
 

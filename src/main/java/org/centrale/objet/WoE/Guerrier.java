@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer;
 import java.util.Random;
 
 /**
@@ -55,6 +55,19 @@ public class Guerrier extends Personnage implements Combattant{
     public Guerrier(Guerrier g) {
         super(g);
     }
+    
+    public Guerrier(String ligne) {
+    StringTokenizer st = new StringTokenizer(ligne, " ");
+    st.nextToken(); // saute "Guerrier"
+    // lire nom
+    this.setNom(st.nextToken());
+
+    // si tu as un attribut distAttMax dans Personnage, le lire ici :
+   this.setDistAttMax(Integer.parseInt(st.nextToken()));
+    // charger le reste (ptVie, degAtt, ptPar, pageAtt, pagePar, posX, posY)
+    chargerDepuisTokenizer(st); // méthode ajoutée dans Creature
+}
+
 
     /**
      * Permet au guerrier d’attaquer une autre créature.
@@ -107,4 +120,11 @@ public class Guerrier extends Personnage implements Combattant{
         }
         else System.out.println("\n Ennemi trop éloigné pour le combat !");
     }
+    
+   public String getTexteSauvegarde() {
+    return "Guerrier " + getNom() + " " + getPtVie() + " " + getDegAtt() + " " +
+           getPtPar() + " " + getPageAtt() + " " + getPagePar() + " " +
+           getDistAttMax() + " " + getPos().getX() + " " + getPos().getY();
+}
+
 }

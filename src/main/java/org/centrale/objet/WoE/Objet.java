@@ -91,7 +91,7 @@ public abstract class Objet {
     /**
      * Définit le comportement de l'objet lorsqu'il est utilisé sur une créature.
      *
-     * @param c la créature sur laquelle l'objet est utilisé
+     * @param p la créature sur laquelle l'objet est utilisé
      */
     public abstract void utiliserObjet(Personnage p);
 
@@ -113,5 +113,22 @@ public abstract class Objet {
      */
     public void affiche() {
         System.out.println(this);
+    }
+    
+     /**
+     * Retourne le texte à sauvegarder dans un fichier.
+     * <p>
+     * Chaque sous-classe doit surcharger cette méthode pour produire
+     * une ligne de texte spécifique à son type :
+     * </p>
+     * <ul>
+     *   <li><b>Epee</b> → "Epee nom bonusAtt posX posY"</li>
+     *   <li><b>PotionSoin</b> → "PotionSoin nom ptVieRendus posX posY"</li>
+     * </ul>
+     *
+     * @return une chaîne prête à être écrite dans un fichier
+     */
+    public String getTexteSauvegarde() {
+        return "Objet " + nom + " " + position.getX() + " " + position.getY();
     }
 }

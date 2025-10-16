@@ -28,6 +28,33 @@ public class FeuilleEpinart extends Nourriture {
         super("Feuille d’épinard", position, 3); // effet dure 3 tours
         this.bonusDegAtt = 2;
     }
+    
+    public FeuilleEpinart(String ligne) {
+    super("FeuilleEpinart", new Point2D(0,0), 3); // valeurs temporaires
+
+    String[] tokens = ligne.split(" ");
+    int n = tokens.length;
+
+    // Derniers éléments : coordonnées et durée
+    int x = Integer.parseInt(tokens[n - 4]);
+    int y = Integer.parseInt(tokens[n - 3]);
+    int duree = Integer.parseInt(tokens[n - 2]);
+    int bonus = Integer.parseInt(tokens[n - 1]);
+
+    // Nom = tout ce qui reste au début
+    StringBuilder nomBuilder = new StringBuilder();
+    for (int i = 1; i < n - 4; i++) {
+        if (i > 1) nomBuilder.append(" ");
+        nomBuilder.append(tokens[i]);
+    }
+
+    super.setNom(nomBuilder.toString());
+    super.setPosition(new Point2D(x, y));
+    super.setDureeEffet(duree);
+    this.bonusDegAtt = bonus;
+}
+
+
 
     public void utiliserObjet(Personnage p) {
       
@@ -42,6 +69,13 @@ public class FeuilleEpinart extends Nourriture {
                 p.setDegAtt(p.getDegAtt() - bonusDegAtt);
                 setEstActive(false);
             }
+   
+public String getTexteSauvegarde() {
+    // Format : FeuilleEpinart nom x y dureeEffet bonusDegAtt
+    return "FeuilleEpinart " + super.getNom() + " " 
+           + getPosition().getX() + " " + getPosition().getY() + " " 
+           + getDureeEffet() + " " + bonusDegAtt;
+}
 
    
 

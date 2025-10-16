@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer;
 /**
  * Représente un lapin, un type de monstre passif du monde.
  * 
@@ -47,6 +47,41 @@ public class Lapin extends Monstre {
      */
     public Lapin(Lapin l) {
         super(l);
+    }
+    
+    /**
+     * Constructeur à partir d'une ligne de sauvegarde texte.
+     * <p>Exemple :
+     * <pre>
+     * Lapin 30 20 20 40 10 23 23
+     * </pre>
+     * </p>
+     */
+    public Lapin(String ligne) {
+        StringTokenizer st = new StringTokenizer(ligne, " ");
+        st.nextToken(); // saute "Lapin"
+        this.setPtVie(Integer.parseInt(st.nextToken()));
+        this.setDegAtt(Integer.parseInt(st.nextToken()));
+        this.setPtPar(Integer.parseInt(st.nextToken()));
+        this.setPageAtt(Integer.parseInt(st.nextToken()));
+        this.setPagePar(Integer.parseInt(st.nextToken()));
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
+        this.setPos(new Point2D(x, y));
+    }
+    
+     /**
+     * Retourne le texte de sauvegarde correspondant à ce lapin.
+     * <p>Format :
+     * <pre>
+     * Lapin ptVie degAtt ptPar pageAtt pagePar posX posY
+     * </pre>
+     * </p>
+     */
+    public String getTexteSauvegarde() {
+        return "Lapin " + getPtVie() + " " + getDegAtt() + " " + getPtPar() + " " +
+               getPageAtt() + " " + getPagePar() + " " +
+               getPos().getX() + " " + getPos().getY();
     }
 }
 

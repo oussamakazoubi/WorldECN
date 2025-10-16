@@ -1,3 +1,4 @@
+/*
 package database;
 
 import org.centrale.objet.WoE.; // adjust to your actual package where World, Creature, Objet, etc. are
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 
 /**
  * Reconstructs a game world from the database for a given save (Sauvegarde).
- */
+ * /
 public class LoadManager {
 
     /**
@@ -17,7 +18,7 @@ public class LoadManager {
      *
      * @param idSauvegarde the save ID
      * @return a reconstructed World object
-     */
+     * /
     public static World loadWorld(int idSauvegarde) throws SQLException {
         World world = new World();
 
@@ -69,7 +70,7 @@ public class LoadManager {
 
     /**
      * Loads a Creature for a given element if one exists.
-     */
+     * /
     private static Creature loadCreatureByElement(Connection conn, int idElement, Point2D pos) throws SQLException {
         String sql = """
             SELECT c.nom, r.libelleRace
@@ -111,7 +112,7 @@ public class LoadManager {
 
     /**
      * Loads an Objet for a given element if one exists.
-     */
+     * /
     private static Objet loadObjetByElement(Connection conn, int idElement, Point2D pos) throws SQLException {
         String sql = """
             SELECT o.nomObjet, t.libelleObjet
@@ -145,3 +146,4 @@ public class LoadManager {
         return null;
     }
 }
+*/

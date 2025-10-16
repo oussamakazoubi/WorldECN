@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer;
 /**
  * Représente un monstre générique dans le monde du jeu.
  * 
@@ -47,6 +47,36 @@ public class Monstre extends Creature {
      */
     public Monstre(Monstre m) {
         super(m);
+    }
+    
+    /**
+     * Constructeur à partir d'une ligne de sauvegarde texte.
+     * <p>
+     * Format attendu : 
+     * <pre>Monstre ptVie degAtt ptPar pageAtt pagePar posX posY</pre>
+     * </p>
+     *
+     * @param ligne ligne contenant les informations du monstre
+     */
+    public Monstre(String ligne) {
+        StringTokenizer st = new StringTokenizer(ligne, " ");
+        st.nextToken(); // saute le mot "Monstre"
+        chargerDepuisTokenizer(st); // méthode utilitaire dans Creature
+    }
+    
+    
+    /**
+     * Retourne le texte de sauvegarde correspondant à ce monstre.
+     * <p>
+     * Format : <pre>Monstre ptVie degAtt ptPar pageAtt pagePar posX posY</pre>
+     * </p>
+     *
+     * @return la chaîne prête à écrire dans le fichier de sauvegarde
+     */
+    public String getTexteSauvegarde() {
+        return "Monstre " + getPtVie() + " " + getDegAtt() + " " + getPtPar() + " " +
+               getPageAtt() + " " + getPagePar() + " " +
+               getPos().getX() + " " + getPos().getY();
     }
 }
 

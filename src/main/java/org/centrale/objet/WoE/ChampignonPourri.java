@@ -20,6 +20,20 @@ public class ChampignonPourri extends Nourriture {
         super(nom, position, dureeEffet);
         this.malusDefense = malusDefense;
     }
+    
+    // --- Constructeur pour chargement depuis fichier ---
+    public ChampignonPourri(String ligne) {
+        // Exemple de ligne : "ChampignonPourri nom x y duree malusDefense"
+        String[] parts = ligne.split(" ");
+        // parts[0] = "ChampignonPourri"
+        this.setNom(parts[1]);
+        int x = Integer.parseInt(parts[2]);
+        int y = Integer.parseInt(parts[3]);
+        this.setPosition(new Point2D(x, y));
+        this.setDureeEffet(Integer.parseInt(parts[4]));
+        this.malusDefense = Integer.parseInt(parts[5]);
+        this.setEstActive(false); // par défaut
+    }
 
     @Override
     public void utiliserObjet(Personnage p) {
@@ -36,5 +50,13 @@ public class ChampignonPourri extends Nourriture {
                 setEstActive(false);
             }
 
+     // --- Méthode pour sauvegarde ---
+    @Override
+    public String getTexteSauvegarde() {
+        // Format : "ChampignonPourri nom x y duree malusDefense"
+        Point2D pos = getPosition();
+        return "ChampignonPourri " + getNom() + " " + pos.getX() + " " + pos.getY() + " "
+                + getDureeEffet() + " " + malusDefense;
+    }
 }
 

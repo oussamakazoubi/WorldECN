@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -47,6 +47,46 @@ public class Joueur {
         this.mdp = j.mdp;
         this.inventaire = j.inventaire;
     }
+    
+    
+    // Constructeur qui charge un joueur à partir d'une ligne de sauvegarde
+public Joueur(String ligne) {
+    this(); // initialise inventaire et autres
+    try {
+        StringTokenizer st = new StringTokenizer(ligne, " ");
+        st.nextToken(); // "Joueur"
+        String typePerso = st.nextToken();
+        
+        if (typePerso.equals("Guerrier")) {
+            persoJoueur = new Guerrier();
+        } else if (typePerso.equals("Archer")) {
+            persoJoueur = new Archer();
+        } else {
+            persoJoueur = new Paysan(); // ou null selon design
+        }
+
+        String nomPerso = st.nextToken();
+        persoJoueur.setNom(nomPerso);
+        persoJoueur.setPtVie(Integer.parseInt(st.nextToken()));
+        persoJoueur.setDegAtt(Integer.parseInt(st.nextToken()));
+        persoJoueur.setPtPar(Integer.parseInt(st.nextToken()));
+        persoJoueur.setPageAtt(Integer.parseInt(st.nextToken()));
+        persoJoueur.setPagePar(Integer.parseInt(st.nextToken()));
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
+        persoJoueur.setPos(new Point2D(x, y));
+
+        if (persoJoueur instanceof Guerrier) {
+            ((Guerrier) persoJoueur).setDistAttMax(Integer.parseInt(st.nextToken()));
+        } else if (persoJoueur instanceof Archer) {
+            ((Archer) persoJoueur).setDistAttMax(Integer.parseInt(st.nextToken()));
+            ((Archer) persoJoueur).setNbFleches(Integer.parseInt(st.nextToken()));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
     public Personnage getPersoJoueur() {
         return persoJoueur;
@@ -58,6 +98,38 @@ public class Joueur {
 
     public ArrayList<Objet> getInventaire() {
         return inventaire;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getMdp() {
+        return mdp;
+    }
+
+    public void setMdp(int mdp) {
+        this.mdp = mdp;
     }
 
     public void setInventaire(ArrayList<Objet> inventaire) {
@@ -236,8 +308,6 @@ public class Joueur {
         }
     }
 
-
-
         public void deplaceJoueur(World monde) {
             System.out.println("\nVotre position est : " + persoJoueur.getPos().toString());
             System.out.println("Choisissez une direction pour vous déplacer :");
@@ -280,6 +350,33 @@ public class Joueur {
             monde.chercherObjet(this.persoJoueur);
             System.out.println(persoJoueur.getNom() + " se déplace en " + persoJoueur.getPos().toString());
         }
+
+        // Retourne le texte de sauvegarde du joueur et de son personnage
+public String getTexteSauvegarde() {
+    if (persoJoueur == null) return "Joueur " + nom; // joueur sans personnage
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("Joueur ");
+    sb.append(persoJoueur.getClass().getSimpleName()).append(" ");
+    sb.append(persoJoueur.getNom()).append(" ");
+    sb.append(persoJoueur.getPtVie()).append(" ");
+    sb.append(persoJoueur.getDegAtt()).append(" ");
+    sb.append(persoJoueur.getPtPar()).append(" ");
+    sb.append(persoJoueur.getPageAtt()).append(" ");
+    sb.append(persoJoueur.getPagePar()).append(" ");
+    sb.append(persoJoueur.getPos().getX()).append(" ");
+    sb.append(persoJoueur.getPos().getY());
+    
+    // Si le personnage a des attributs spécifiques, ajouter ici
+    if (persoJoueur instanceof Guerrier) {
+        sb.append(" ").append(((Guerrier) persoJoueur).getDistAttMax());
+    } else if (persoJoueur instanceof Archer) {
+        Archer a = (Archer) persoJoueur;
+        sb.append(" ").append(a.getDistAttMax());
+        sb.append(" ").append(a.getNbFleches());
+    }
+    return sb.toString();
+}
 
 
 }

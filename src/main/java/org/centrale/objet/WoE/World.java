@@ -4,6 +4,8 @@
 package org.centrale.objet.WoE;
 
 import java.util.*;
+ import java.io.*;
+import java.util.StringTokenizer;
 
 /**
  * Représente le monde du jeu. Contient les personnages, les monstres et les objets.
@@ -421,5 +423,151 @@ public class World {
             o.affiche();
         }
     }
+
+    /**
+     * Sauvegarde l'état du monde dans un fichier texte.
+     * Le format respecte la structure décrite dans le TP6.
+     */
+    public void sauvegardePartie(String nomFichier) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomFichier))) {
+
+            // Écriture des dimensions du monde
+            writer.write("Largeur " + this.largeur);
+            writer.newLine();
+            writer.write("Longueur " + this.longueur);
+            writer.newLine();
+
+            // Sauvegarde des personnages (hors joueur)
+            for (Personnage p : maListePers) {
+                if (joueur == null || !p.equals(joueur.getPersoJoueur())) {
+                    writer.write(p.getTexteSauvegarde());
+                    writer.newLine();
+                }
+            }
+
+            // Sauvegarde des monstres
+            for (Monstre m : maListeMons) {
+                writer.write(m.getTexteSauvegarde());
+                writer.newLine();
+            }
+
+            // Sauvegarde des objets
+            for (Objet o : maListeobj) {
+                writer.write(o.getTexteSauvegarde());
+                writer.newLine();
+            }
+
+            // Sauvegarde du joueur humain
+            if (joueur != null) {
+                writer.write(joueur.getTexteSauvegarde());
+                writer.newLine();
+
+                // Sauvegarde de l'inventaire du joueur
+                for (Objet o : joueur.getInventaire()) {
+                    writer.write("Inventaire " + o.getTexteSauvegarde());
+                    writer.newLine();
+                }
+            }
+
+            System.out.println(" Sauvegarde effectuée dans le fichier : " + nomFichier);
+
+        } catch (IOException e) {
+            System.err.println(" Erreur lors de la sauvegarde : " + e.getMessage());
+        }
+    }
+
+
+    /**
+     * Charge une partie sauvegardée depuis un fichier texte.
+     * Recrée le monde à partir des données lues.
+     * @param nomFichier
+     */
+    public void chargementPartie(String nomFichier) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(nomFichier))) {
+        // On vide le monde actuel avant de charger
+        maListePers.clear();
+        maListeMons.clear();
+        maListeobj.clear();
+
+        String ligne;
+        while ((ligne = reader.readLine()) != null) {
+            StringTokenizer st = new StringTokenizer(ligne, " ");
+            String type = st.nextToken();
+
+            switch (type) {
+                case "Largeur":
+                    this.largeur = Integer.parseInt(st.nextToken());
+                    break;
+
+                case "Longueur":
+                    this.longueur = Integer.parseInt(st.nextToken());
+                    break;
+
+                // --- Personnages ---
+                case "Guerrier":
+                    maListePers.add(new Guerrier(ligne));
+                    break;
+                case "Archer":
+                    maListePers.add(new Archer(ligne));
+                    break;
+                case "Paysan":
+                    maListePers.add(new Paysan(ligne));
+                    break;
+
+                // --- Monstres ---
+                case "Loup":
+                    maListeMons.add(new Loup(ligne));
+                    break;
+                case "Lapin":
+                    maListeMons.add(new Lapin(ligne));
+                    break;
+
+                // --- Objets ---
+                case "PotionSoin":
+                    maListeobj.add(new PotionSoin(ligne));
+                    break;
+                case "Epee":
+                    maListeobj.add(new Epee(ligne));
+                    break;
+                case "FeuilleEpinart":
+                    maListeobj.add(new FeuilleEpinart(ligne));
+                    break;
+                case "ChampignonPourri":
+                    maListeobj.add(new ChampignonPourri(ligne));
+                    break;
+
+                // --- Joueur ---
+                case "Joueur":
+                    this.joueur = new Joueur(ligne);
+                    break;
+
+                // --- Inventaire du joueur ---
+                case "Inventaire":
+                    String reste = ligne.substring("Inventaire".length()).trim();
+                    Objet obj = null;
+
+                    if (reste.startsWith("PotionSoin"))
+                        obj = new PotionSoin(reste);
+                    else if (reste.startsWith("Epee"))
+                        obj = new Epee(reste);
+                    else if (reste.startsWith("FeuilleEpinart"))
+                        obj = new FeuilleEpinart(reste);
+                    else if (reste.startsWith("ChampignonPourri"))
+                        obj = new ChampignonPourri(reste);
+
+                    if (obj != null && joueur != null)
+                        joueur.getInventaire().add(obj);
+                    break;
+            }
+        }
+
+        System.out.println(" Chargement du fichier " + nomFichier + " terminé avec succès.");
+
+    } catch (IOException e) {
+        System.err.println(" Erreur lors du chargement : " + e.getMessage());
+    }
+}
+
+
 
 }

@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
-
+import java.util.StringTokenizer;
 import java.util.Random;
 
 /**
@@ -64,6 +64,28 @@ public class Archer extends Personnage implements Combattant{
         super(a);
         this.nbFleches = a.nbFleches;
     }
+    
+    /**
+     * Constructeur à partir d'une ligne de sauvegarde texte.
+     * Exemple de ligne :
+     * Archer robin 75 20 5 75 30 5 15 5 20
+     */
+    public Archer(String ligne) {
+        StringTokenizer st = new StringTokenizer(ligne, " ");
+        st.nextToken(); // saute "Archer"
+        this.setNom(st.nextToken());
+        this.setPtVie(Integer.parseInt(st.nextToken()));
+        this.setDegAtt(Integer.parseInt(st.nextToken()));
+        this.setPtPar(Integer.parseInt(st.nextToken()));
+        this.setPageAtt(Integer.parseInt(st.nextToken()));
+        this.setPagePar(Integer.parseInt(st.nextToken()));
+        this.setDistAttMax(Integer.parseInt(st.nextToken()));
+        this.setNbFleches(Integer.parseInt(st.nextToken()));
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
+        this.setPos(new Point2D(x, y));
+    }
+    
 
     /** Retourne le nombre de flèches restantes. */
     public int getNbFleches() {
@@ -146,6 +168,17 @@ public class Archer extends Personnage implements Combattant{
             System.out.println("Impossible d’attaquer à distance : plus de flèches !");
         }
         else System.out.println("\n Ennemi trop éloigné pour le combat !");
+    }
+    
+    /**
+     * Retourne le texte de sauvegarde correspondant à cet archer.
+     * Format : Archer nom ptVie degAtt ptPar pageAtt pagePar distAttMax nbFleches posX posY
+     */
+    public String getTexteSauvegarde() {
+        return "Archer " + getNom() + " " + getPtVie() + " " + getDegAtt() + " " +
+               getPtPar() + " " + getPageAtt() + " " + getPagePar() + " " +
+               getDistAttMax() + " " + getNbFleches() + " " +
+               getPos().getX() + " " + getPos().getY();
     }
 }
 
