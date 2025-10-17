@@ -245,6 +245,8 @@ public class Joueur {
             System.out.print("Votre choix : ");
             choix = scanner.nextLine();
 
+            Joueur.afficherGrille(monde, this);
+
             monde.maListePers.removeIf(p -> p.getPtVie() <= 0);
             monde.maListeMons.removeIf(m -> m.getPtVie() <= 0);
 
