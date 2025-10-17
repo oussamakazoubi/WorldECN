@@ -227,7 +227,7 @@ public class Joueur {
         Scanner scanner = new Scanner(System.in);
         String choix;
 
-
+        Joueur.afficherGrille(monde, this);
 
         do {
             System.out.println("""
@@ -245,7 +245,7 @@ public class Joueur {
             System.out.print("Votre choix : ");
             choix = scanner.nextLine();
 
-            Joueur.afficherGrille(monde, this);
+
 
             monde.maListePers.removeIf(p -> p.getPtVie() <= 0);
             monde.maListeMons.removeIf(m -> m.getPtVie() <= 0);
