@@ -35,6 +35,6 @@ public class TestWoE {
 
                 MainMenu.startGame();
             }
-        }
-
 }
+
+
