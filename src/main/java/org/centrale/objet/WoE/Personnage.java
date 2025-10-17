@@ -10,53 +10,57 @@ import java.util.StringTokenizer;
 import java.util.Iterator;
 
 /**
- * La classe {@code Personnage} représente un être jouable ou contrôlable dans le monde.
- * <p>
- * Un personnage hérite de {@link Creature} et possède des caractéristiques
- * supplémentaires comme un nom et une distance maximale d’attaque.
- * </p>
+ * Représente un personnage jouable ou contrôlable dans le monde de jeu.
  *
+ * <p>Un {@code Personnage} hérite de {@link Creature} et possède des caractéristiques
+ * supplémentaires telles que :</p>
  * <ul>
  *   <li>Un nom unique identifiant le personnage</li>
  *   <li>Une distance maximale d’attaque ({@code distAttMax})</li>
- *   <li>Les caractéristiques héritées : points de vie, dégâts, parade, etc.</li>
+ *   <li>Une liste de nourritures ou objets utilisables ayant des effets temporaires</li>
  * </ul>
  *
- * @author Imane
+ * <p>Les sous-classes (comme {@code Guerrier}, {@code Archer}, {@code Paysan}, etc.)
+ * héritent de cette structure de base.</p>
+ *
+ * @author Oussama
  * @see Creature
  */
 public class Personnage extends Creature {
-    
+
+    /** Liste des nourritures actuellement actives ou utilisables par le personnage. */
     private ArrayList<Nourriture> Utilisables;
-    
-    /** Nom du personnage */
+
+    /** Nom du personnage. */
     private String nom;
 
-    /** Distance maximale d’attaque du personnage */
+    /** Distance maximale d’attaque du personnage. */
     private int distAttMax;
+
+    // ===================== CONSTRUCTEURS =====================
 
     /**
      * Constructeur par défaut.
-     * <p>
-     * Initialise un personnage sans nom et avec des caractéristiques nulles.
-     * </p>
+     * <p>Initialise un personnage sans nom, avec des caractéristiques nulles
+     * et une liste vide d’objets utilisables.</p>
      */
     public Personnage() {
         super();
-        this.nom = "Non nommee"; // Better this way Trust me
+        this.nom = "Non nommee";
         this.distAttMax = 0;
-        Utilisables= new ArrayList<>();
+        Utilisables = new ArrayList<>();
     }
 
     /**
-     * Constructeur avec paramètres permettant d’initialiser toutes les caractéristiques.
+     * Constructeur complet avec paramètres.
+     * <p>Permet d’initialiser toutes les caractéristiques du personnage.</p>
      *
      * @param n nom du personnage
      * @param pV points de vie
      * @param dA dégâts d’attaque
      * @param pPar points de parade
-     * @param paAtt points d’attaque spéciale
-     * @param paPar points de parade spéciale
+     * @param paAtt chance de réussite d’attaque
+     * @param paPar chance de réussite de parade
      * @param dMax distance maximale d’attaque
      * @param p position initiale du personnage
      */
@@ -76,67 +80,60 @@ public class Personnage extends Creature {
         this.nom = perso.nom;
         this.distAttMax = perso.distAttMax;
     }
-    
-      /** Constructeur depuis une ligne texte (pour le chargement de sauvegarde) */
+
+    /**
+     * Constructeur utilisé lors du chargement depuis un fichier texte.
+     * <p>Les données du personnage sont lues à partir d’une ligne sauvegardée.</p>
+     *
+     * @param ligne ligne de texte contenant les informations du personnage
+     */
     public Personnage(String ligne) {
         StringTokenizer st = new StringTokenizer(ligne, " ");
         st.nextToken(); // saute le mot-clé "Personnage" ou "Guerrier"/"Archer"/etc.
         this.nom = st.nextToken();
         this.distAttMax = Integer.parseInt(st.nextToken());
-        chargerDepuisTokenizer(st); // méthode utilitaire dans Creature
+        chargerDepuisTokenizer(st); // méthode héritée de Creature
         Utilisables = new ArrayList<>();
     }
 
+    // ===================== GETTERS & SETTERS =====================
+
+    /** @return la liste des nourritures ou objets utilisables */
     public ArrayList<Nourriture> getUtilisables() {
         return Utilisables;
     }
 
+    /** @param Utilisables nouvelle liste d’objets utilisables */
     public void setUtilisables(ArrayList<Nourriture> Utilisables) {
         this.Utilisables = Utilisables;
     }
-    
-    
 
-    /**
-     * Retourne le nom du personnage.
-     *
-     * @return le nom du personnage
-     */
+    /** @return le nom du personnage */
     public String getNom() {
         return nom;
     }
 
-    /**
-     * Définit le nom du personnage.
-     *
-     * @param nom le nouveau nom du personnage
-     */
+    /** @param nom le nouveau nom du personnage */
     public void setNom(String nom) {
         this.nom = nom;
     }
 
-    /**
-     * Retourne la distance maximale d’attaque.
-     *
-     * @return la distance maximale d’attaque
-     */
+    /** @return la distance maximale d’attaque du personnage */
     public int getDistAttMax() {
         return distAttMax;
     }
 
-    /**
-     * Définit la distance maximale d’attaque.
-     *
-     * @param distAttMax nouvelle distance d’attaque maximale
-     */
+    /** @param distAttMax nouvelle distance maximale d’attaque */
     public void setDistAttMax(int distAttMax) {
         this.distAttMax = distAttMax;
     }
 
+    // ===================== AFFICHAGE =====================
+
     /**
      * Retourne une représentation textuelle complète du personnage.
      *
-     * @return chaîne de caractères décrivant le personnage
+     * @return chaîne décrivant toutes les caractéristiques du personnage
      */
     @Override
     public String toString() {
@@ -148,30 +145,36 @@ public class Personnage extends Creature {
     }
 
     /**
-     * Affiche les informations du personnage sur la console.
+     * Affiche les informations du personnage dans la console.
      */
     public void affiche() {
         System.out.println(this);
     }
 
+    // ===================== DÉPLACEMENT =====================
+
     /**
      * Déplace le personnage dans le monde.
-     * <p>
-     * Le déplacement est géré par {@link Creature#deplace(World)}.
-     * Après le déplacement, le personnage cherche les objets
-     * présents à sa nouvelle position dans le {@link World}.
-     * </p>
+     * <p>Le déplacement est effectué via {@link Creature#deplace(World)}.
+     * Après le déplacement, le personnage vérifie la présence d’un objet
+     * sur la case actuelle via {@link World#chercherObjet(Creature)}.</p>
      *
-     * @param monde monde dans lequel le personnage se déplace
+     * @param monde le monde dans lequel le personnage se déplace
      */
     @Override
     public void deplace(World monde) {
         super.deplace(monde);
         monde.chercherObjet(this);
-        
-       
     }
-    
+
+    // ===================== GESTION DES EFFETS =====================
+
+    /**
+     * Met à jour les effets temporaires des nourritures consommées.
+     * <p>Chaque nourriture active voit sa durée d’effet diminuer d’un tour.
+     * Lorsque sa durée arrive à 0, son effet est annulé et elle est retirée
+     * de la liste des objets actifs.</p>
+     */
     public void mettreAJourEffets() {
         Iterator<Nourriture> it = Utilisables.iterator();
         while (it.hasNext()) {
@@ -180,32 +183,34 @@ public class Personnage extends Creature {
                 n.decrementerEffet();
                 if (n.getDureeEffet() == 0) {
                     System.out.println("L'effet de " + n.getNom() + " sur " + nom + " est terminé.");
-                    n.annulerEffet(this); // retire le bonus (ex: -2 degAtt)
-                    it.remove(); // supprime la nourriture expirée
+                    n.annulerEffet(this);
+                    it.remove();
                 }
             }
         }
     }
-    
-    // --- Sauvegarde ---
+
+    // ===================== SAUVEGARDE =====================
+
     /**
      * Retourne le texte de sauvegarde commun à tous les personnages.
-     * Format : "ptVie degAtt ptPar pageAtt pagePar posX posY"
+     * <p>Format : {@code "ptVie degAtt ptPar pageAtt pagePar posX posY"}</p>
+     *
+     * @return chaîne de texte contenant les caractéristiques communes
      */
     public String getTexteSauvegardeCommun() {
         return getPtVie() + " " + getDegAtt() + " " + getPtPar() + " " +
-               getPageAtt() + " " + getPagePar() + " " +
-               getPos().getX() + " " + getPos().getY();
-      
+                getPageAtt() + " " + getPagePar() + " " +
+                getPos().getX() + " " + getPos().getY();
     }
 
     /**
      * Retourne le texte de sauvegarde complet pour un personnage générique.
-     * Les sous-classes peuvent surcharger cette méthode.
+     * <p>Les sous-classes peuvent surcharger cette méthode pour inclure leurs propres attributs.</p>
+     *
+     * @return chaîne de texte contenant toutes les informations du personnage
      */
     public String getTexteSauvegarde() {
         return "Personnage " + nom + " " + distAttMax + " " + getTexteSauvegardeCommun();
     }
-    
-    }
-
+}

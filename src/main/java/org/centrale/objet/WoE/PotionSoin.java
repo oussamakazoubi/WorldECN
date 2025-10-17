@@ -2,33 +2,42 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package org.centrale.objet.WoE;
+
 import java.util.StringTokenizer;
+
 /**
- * Représente une potion de soin que les créatures peuvent ramasser dans le monde.
- * <p>
- * Lorsqu'une créature utilise une {@code PotionSoin}, ses points de vie 
- * sont augmentés d'une certaine quantité déterminée par {@code ptVieRendus}.
- * </p>
+ * Représente une {@code PotionSoin}, un objet que les personnages peuvent ramasser et utiliser.
+ *
+ * <p>Lorsqu’un personnage consomme une potion de soin, celle-ci restaure un certain
+ * nombre de points de vie déterminé par l’attribut {@code ptVieRendus}.</p>
+ *
+ * <p>Les potions peuvent être placées dans le monde, ramassées, utilisées
+ * ou sauvegardées dans un fichier texte.</p>
  *
  * @author Imane
+ * @see Objet
+ * @see Personnage
  */
 public class PotionSoin extends Objet {
-    
+
     /** Nombre de points de vie rendus par la potion. */
     private int ptVieRendus;
-    
+
+    // ===================== CONSTRUCTEURS =====================
+
     /**
      * Constructeur par défaut.
-     * Initialise une potion sans effet (0 point de vie rendu).
+     * <p>Crée une potion sans effet (rend 0 point de vie) positionnée à (0, 0).</p>
      */
     public PotionSoin() {
         super();
         this.ptVieRendus = 0;
     }
-    
+
     /**
-     * Constructeur paramétré.
+     * Constructeur complet avec paramètres.
      *
      * @param nom nom de la potion
      * @param position position de la potion dans le monde
@@ -38,7 +47,7 @@ public class PotionSoin extends Objet {
         super(nom, position);
         this.ptVieRendus = ptVieRendus;
     }
-    
+
     /**
      * Constructeur de copie.
      *
@@ -48,11 +57,15 @@ public class PotionSoin extends Objet {
         super(pS);
         this.ptVieRendus = pS.ptVieRendus;
     }
-    
-     /**
-     * Constructeur à partir d'une ligne texte (chargement depuis fichier).
-     * Exemple :
+
+    /**
+     * Constructeur utilisé lors du chargement depuis un fichier texte.
+     * <p>Exemple de ligne :</p>
+     * <pre>
      * PotionSoin potionVie 20 5 8
+     * </pre>
+     *
+     * @param ligne ligne de texte contenant les informations de la potion
      */
     public PotionSoin(String ligne) {
         StringTokenizer st = new StringTokenizer(ligne, " ");
@@ -64,23 +77,15 @@ public class PotionSoin extends Objet {
         this.setPosition(new Point2D(x, y));
     }
 
+    // ===================== ACCESSEURS =====================
+
     /**
      * Retourne le nombre de points de vie rendus par la potion.
      *
-     * @return le nombre de points de vie rendus
+     * @return le nombre de points de vie restaurés
      */
     public int getSoin() {
         return ptVieRendus;
-    }
-    
-    /**
-     * Utilise la potion sur une créature, augmentant ses points de vie.
-     *
-     * @param c la créature sur laquelle la potion est utilisée
-     */
-    @Override
-    public void utiliserObjet(Personnage p) {
-        p.setPtVie(p.getPtVie() + ptVieRendus);
     }
 
     /**
@@ -92,10 +97,26 @@ public class PotionSoin extends Objet {
         this.ptVieRendus = ptVieRendus;
     }
 
+    // ===================== UTILISATION =====================
+
     /**
-     * Retourne une représentation textuelle de la potion.
+     * Utilise la potion sur un personnage.
+     * <p>Augmente les points de vie du personnage du montant défini
+     * par {@code ptVieRendus}.</p>
      *
-     * @return une chaîne de caractères décrivant la potion
+     * @param p le personnage qui consomme la potion
+     */
+    @Override
+    public void utiliserObjet(Personnage p) {
+        p.setPtVie(p.getPtVie() + ptVieRendus);
+    }
+
+    // ===================== AFFICHAGE =====================
+
+    /**
+     * Retourne une représentation textuelle complète de la potion.
+     *
+     * @return chaîne de caractères décrivant la potion
      */
     @Override
     public String toString() {
@@ -113,14 +134,21 @@ public class PotionSoin extends Objet {
     public void affiche() {
         System.out.println(this);
     }
-    
+
+    // ===================== SAUVEGARDE =====================
+
     /**
-     * Retourne le texte de sauvegarde correspondant à cette potion.
-     * Format :
+     * Retourne la ligne de texte correspondant à la sauvegarde de cette potion.
+     *
+     * <p>Format de sortie :</p>
+     * <pre>
      * PotionSoin nom ptVieRendus posX posY
+     * </pre>
+     *
+     * @return chaîne prête à être enregistrée dans un fichier de sauvegarde
      */
     public String getTexteSauvegarde() {
         return "PotionSoin " + getNom() + " " + ptVieRendus + " " +
-               getPosition().getX() + " " + getPosition().getY();
+                getPosition().getX() + " " + getPosition().getY();
     }
 }

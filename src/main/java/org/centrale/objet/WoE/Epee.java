@@ -2,25 +2,33 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package org.centrale.objet.WoE;
+
 import java.util.StringTokenizer;
+
 /**
- * Représente une épée que les créatures peuvent ramasser.
- * <p>
- * Lorsqu'une créature utilise une {@code Epée}, ses dégâts d'attaque 
- * sont augmentés d'un certain bonus défini par {@code bonusAtt}.
- * </p>
+ * Représente une {@code Epee}, un objet que les personnages peuvent ramasser et utiliser.
+ *
+ * <p>Lorsqu’un personnage équipe une épée, celle-ci augmente ses dégâts d’attaque
+ * d’un bonus défini par l’attribut {@code bonusAtt}.</p>
+ *
+ * <p>Les épées peuvent être placées dans le monde, sauvegardées et chargées depuis un fichier texte.</p>
  *
  * @author Imane
+ * @see Objet
+ * @see Personnage
  */
 public class Epee extends Objet {
 
-    /** Bonus de dégâts d'attaque apporté par l'épée. */
+    /** Bonus de dégâts d’attaque apporté par l’épée. */
     private int bonusAtt;
-    
+
+    // ===================== CONSTRUCTEURS =====================
+
     /**
      * Constructeur par défaut.
-     * Crée une épée sans bonus d'attaque.
+     * <p>Crée une épée sans bonus d’attaque et placée à la position (0, 0).</p>
      */
     public Epee() {
         super();
@@ -28,11 +36,11 @@ public class Epee extends Objet {
     }
 
     /**
-     * Constructeur paramétré.
+     * Constructeur complet avec paramètres.
      *
-     * @param nom nom de l'épée
-     * @param position position de l'épée dans le monde
-     * @param bonusAtt bonus de dégâts d'attaque conféré
+     * @param nom nom de l’épée
+     * @param position position de l’épée dans le monde
+     * @param bonusAtt bonus de dégâts d’attaque conféré par l’épée
      */
     public Epee(String nom, Point2D position, int bonusAtt) {
         super(nom, position);
@@ -48,11 +56,15 @@ public class Epee extends Objet {
         super(e);
         this.bonusAtt = e.bonusAtt;
     }
-    
+
     /**
-     * Constructeur à partir d'une ligne texte.
-     * Exemple :
+     * Constructeur utilisé lors du chargement depuis un fichier texte.
+     * <p>Exemple de ligne :</p>
+     * <pre>
      * Epee Excalibur 15 12 8
+     * </pre>
+     *
+     * @param ligne ligne de texte contenant les informations de l’épée
      */
     public Epee(String ligne) {
         StringTokenizer st = new StringTokenizer(ligne, " ");
@@ -64,8 +76,19 @@ public class Epee extends Objet {
         this.setPosition(new Point2D(x, y));
     }
 
+    // ===================== ACCESSEURS =====================
+
     /**
-     * Définit le bonus d'attaque de l'épée.
+     * Retourne le bonus d’attaque conféré par l’épée.
+     *
+     * @return le bonus d’attaque
+     */
+    public int getBonusAtt() {
+        return bonusAtt;
+    }
+
+    /**
+     * Définit le bonus d’attaque de l’épée.
      *
      * @param bonusAtt le nouveau bonus
      */
@@ -73,33 +96,29 @@ public class Epee extends Objet {
         this.bonusAtt = bonusAtt;
     }
 
-    /**
-     * Retourne le bonus d'attaque de l'épée.
-     *
-     * @return le bonus d'attaque
-     */
-    public int getBonusAtt() {
-        return bonusAtt;
-    }
+    // ===================== UTILISATION =====================
 
     /**
-     * Utilise l'épée sur une créature, augmentant ses dégâts d'attaque.
+     * Utilise l’épée sur un personnage.
+     * <p>Augmente les dégâts d’attaque du personnage du montant du {@code bonusAtt}.</p>
      *
-     * @param c la créature équipée de l'épée
+     * @param p le personnage qui équipe l’épée
      */
     @Override
     public void utiliserObjet(Personnage p) {
         p.setDegAtt(p.getDegAtt() + bonusAtt);
     }
 
+    // ===================== AFFICHAGE =====================
+
     /**
-     * Retourne une représentation textuelle de l'épée.
+     * Retourne une représentation textuelle complète de l’épée.
      *
-     * @return une chaîne de caractères décrivant l'épée
+     * @return chaîne de caractères décrivant l’épée
      */
     @Override
     public String toString() {
-        return "Epée{" +
+        return "Epee{" +
                 "nom='" + getNom() + '\'' +
                 ", position=" + getPosition() +
                 ", bonusAtt=" + bonusAtt +
@@ -107,20 +126,27 @@ public class Epee extends Objet {
     }
 
     /**
-     * Affiche les informations de l'épée sur la console.
+     * Affiche les informations de l’épée sur la console.
      */
     @Override
     public void affiche() {
         System.out.println(this);
     }
-    
+
+    // ===================== SAUVEGARDE =====================
+
     /**
-     * Retourne le texte de sauvegarde correspondant à cette épée.
-     * Format :
+     * Retourne la ligne de texte correspondant à la sauvegarde de cette épée.
+     *
+     * <p>Format de sortie :</p>
+     * <pre>
      * Epee nom bonusAtt posX posY
+     * </pre>
+     *
+     * @return chaîne de texte prête à être enregistrée dans un fichier de sauvegarde
      */
     public String getTexteSauvegarde() {
         return "Epee " + getNom() + " " + bonusAtt + " " +
-               getPosition().getX() + " " + getPosition().getY();
+                getPosition().getX() + " " + getPosition().getY();
     }
 }
