@@ -22,6 +22,7 @@ public class Joueur {
     private static final ArrayList<Class<? extends Personnage>> PersoJouable = new ArrayList<>(Arrays.asList(Guerrier.class, Archer.class));
     private Personnage persoJoueur;
     private ArrayList<Objet> inventaire;
+    private ArrayList<String> listeSauvegarde;
 
     public Joueur() {
         nom = "";
@@ -29,6 +30,7 @@ public class Joueur {
         email = "";
         mdp = 0;
         inventaire = new ArrayList<>();
+        listeSauvegarde= new ArrayList<>();
     }
 
     public Joueur(String nom, String pseudo, String email, int mdp) {
@@ -232,39 +234,60 @@ public Joueur(String ligne) {
     }
 
 
-    public void choisirPreference(World monde) {
-        if (this.persoJoueur == null) {
-            System.out.println("Aucun personnage valide choisi. Fin du tour.");
-            return;
+   public void choisirPreference(World monde) {
+    if (this.persoJoueur == null) {
+        System.out.println("Aucun personnage valide choisi. Fin du tour.");
+        return;
+    }
+
+    Scanner scanner = new Scanner(System.in);
+    String choix;
+
+    do {
+        System.out.println("""
+            === MENU DU JOUEUR ===
+            1 = Se déplacer
+            2 = Combattre
+            3 = Tour suivante
+            4 = Utiliser inventaire
+            5 = Afficher le monde
+            6 = Sauvegarder la partie
+            7 = Charger une partie
+            8 = Quitter le jeu
+        """);
+
+        System.out.print("Votre choix : ");
+        choix = scanner.nextLine();
+
+        switch (choix) {
+            case "1", "deplacer" -> this.deplaceJoueur(monde);
+            case "2", "combattre" -> this.combattreJoueur(monde);
+            case "3", "Tour Suivante" -> monde.tourDeJeu();
+            case "4", "Inventaire" -> utiliserObjetInventaire();
+            case "5", "Afficher monde" -> monde.affiche();
+            case "6", "Sauvegarder partie" ->  {
+                System.out.print("Nom du fichier de sauvegarde : ");
+                String fichier = scanner.nextLine();
+                monde.SauvegardePartie(fichier);
+                listeSauvegarde.add(fichier);
+                System.out.println("Partie sauvegardée dans " + fichier);
+                monde.affiche();
+            }
+            case "7", "Charger partie" -> {
+                System.out.print("Nom du fichier à charger : ");
+                String fichier = scanner.nextLine();
+                monde.ChargementPartie(fichier);
+                System.out.println("Partie chargée depuis " + fichier);
+                monde.affiche();
+            }
+            case "8", "quitter" -> System.out.println("Fin du jeu. À bientôt !");
+            default -> System.out.println("Choix invalide. Réessayez !");
         }
 
-        Scanner scanner = new Scanner(System.in);
-        String choix;
+    } while (!choix.equals("8"));
 
-        do {
-            System.out.println("Choisir action : 1=deplacer, 2=combattre, 3=Tour Suivante, 4=Inventaire , 5=Afficher monde, 6=quitter");
-            choix = scanner.nextLine();
-
-            switch (choix) {
-                case "1", "deplacer" -> this.deplaceJoueur(monde);
-
-                case "2", "combattre" -> this.combattreJoueur(monde);
-
-                case "3", "Tour Suivante" -> monde.tourDeJeu();
-
-                case "4", "Iventaire" -> utiliserObjetInventaire();
-
-                case "5", "Afficher monde" -> monde.affiche();
-
-                case "6", "quitter" -> System.out.println("Fin de jeu");
-
-                default -> System.out.println("Refais ton choix !");
-            }
-
-        } while (!choix.equals("6"));
-
-        monde.chercherObjet(this.persoJoueur);
-    }
+    monde.chercherObjet(this.persoJoueur);
+}
 
 
     public void utiliserObjetInventaire() {

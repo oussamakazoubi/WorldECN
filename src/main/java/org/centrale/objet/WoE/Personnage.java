@@ -196,6 +196,7 @@ public class Personnage extends Creature {
         return getPtVie() + " " + getDegAtt() + " " + getPtPar() + " " +
                getPageAtt() + " " + getPagePar() + " " +
                getPos().getX() + " " + getPos().getY();
+      
     }
 
     /**

@@ -3,75 +3,59 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.centrale.objet.WoE;
-import java.util.*;
+
 
 /**
  * Classe de test pour le projet "World of ECN".
+ * 
+ * 
  * Teste la création du monde, l'affichage des entités, 
  * la sauvegarde et le chargement.
  */
+
+
 public class TestWoE {
 
     public static void main(String[] args) {
- // ========================
-        // 1️⃣ Création du monde
-        // ========================
-        World monde = new World();
-        monde.setLongueur(50); // par exemple 50x50
-        monde.setLargeur(50);
+        
 
-        // ========================
-        // 2️⃣ Création du joueur
-        // ========================
-        Joueur joueur = new Joueur();
-        joueur.setNom("Hero");
-        joueur.setPersoJoueur(new Guerrier());
-        joueur.getPersoJoueur().setPos(new Point2D(5, 5));
+        System.out.println("=== Lancement du jeu World of ECN ===");
+
+        // --- Création du monde ---
+        World monde = new World();
+        monde.setLongueur(20);
+        monde.setLargeur(20);
+
+        // --- Création du joueur ---
+        Joueur joueur = new Joueur("Imane", "Imane123", "imane@ecn.fr", 1234);
+        joueur.ChoisirPersonnage(monde);
         monde.setJoueur(joueur);
 
-        // ========================
-        // 3️⃣ Création aléatoire d'autres entités
-        // ========================
+        // --- Création d’un monde aléatoire ---
         monde.creerMondeAlea(
-            2, // archers
-            2, // paysans
-            2, // lapins
-            2, // guerriers
-            2, // loups
-            2, // potions
-            2, // épées
-            2, // champignons
-            2  // feuilles d’épinard
+                2, // nb Archers
+                2, // nb Paysans
+                3, // nb Lapins
+                2, // nb Guerriers
+                2, // nb Loups
+                2, // nb Potions
+                2, // nb Épées
+                1, // nb ChampignonsPourris
+                1  // nb Feuilles d’épinard
         );
 
-        // ========================
-        // 4️⃣ Affichage du monde initial
-        // ========================
-        System.out.println("=== Monde initial ===");
+        System.out.println("\n=== Monde initial créé ===");
         monde.affiche();
+        
+        //Scanner scan= new Scanner();
+        
 
-        // ========================
-        // 5️⃣ Sauvegarde
-        // ========================
-        String fichier = "sauvegarde_test.txt";
-        monde.sauvegardePartie(fichier);
-
-        // ========================
-        // 6️⃣ Création d’un nouveau monde vide et chargement
-        // ========================
-        World mondeCharge = new World();
-        mondeCharge.chargementPartie(fichier);
-
-        // ========================
-        // 7️⃣ Affichage du monde chargé
-        // ========================
-        System.out.println("\n=== Monde chargé ===");
-        mondeCharge.affiche();
-
-        // ========================
-        // Tout le reste du code de test, exceptions, anciens tests, etc.
-        // est commenté pour l'instant.
-        // ========================
+        // --- Déroulement de quelques tours ---
+        System.out.println("\n=== Début du jeu ===");
+        for (int i = 0; i < 2; i++) {
+            System.out.println("\n--- Tour " + (i + 1) + " ---");
+            monde.tourDeJeuHumain(joueur);
+        }
+        System.out.println("\n=== Fin du test ===");
     }
 }
-       

@@ -428,7 +428,7 @@ public class World {
      * Sauvegarde l'état du monde dans un fichier texte.
      * Le format respecte la structure décrite dans le TP6.
      */
-    public void sauvegardePartie(String nomFichier) {
+    public void SauvegardePartie(String nomFichier) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomFichier))) {
 
             // Écriture des dimensions du monde
@@ -482,7 +482,7 @@ public class World {
      * Recrée le monde à partir des données lues.
      * @param nomFichier
      */
-    public void chargementPartie(String nomFichier) {
+    public void ChargementPartie(String nomFichier) {
     try (BufferedReader reader = new BufferedReader(new FileReader(nomFichier))) {
         // On vide le monde actuel avant de charger
         maListePers.clear();
@@ -562,7 +562,6 @@ public class World {
         }
 
         System.out.println(" Chargement du fichier " + nomFichier + " terminé avec succès.");
-
     } catch (IOException e) {
         System.err.println(" Erreur lors du chargement : " + e.getMessage());
     }

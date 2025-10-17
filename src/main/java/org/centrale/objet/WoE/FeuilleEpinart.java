@@ -77,10 +77,7 @@ public String getTexteSauvegarde() {
            + getDureeEffet() + " " + bonusDegAtt;
 }
 
-   
-
-  
-        }
+ }
     
 
    
