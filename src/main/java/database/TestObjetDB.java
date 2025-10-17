@@ -1,4 +1,4 @@
-package database;
+/*package database;
 
 public class TestObjetDB {
     public static void main(String[] args) {
@@ -20,3 +20,4 @@ public class TestObjetDB {
         }
     }
 }
+*/

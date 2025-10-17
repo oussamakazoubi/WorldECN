@@ -18,7 +18,7 @@ public class TestWoE {
 
     public static void main(String[] args) {
         
-
+/*
         System.out.println("=== Lancement du jeu World of ECN ===");
 
         // --- Création du monde ---
@@ -57,5 +57,18 @@ public class TestWoE {
             monde.tourDeJeuHumain(joueur);
         }
         System.out.println("\n=== Fin du test ===");
+    }*/
+    
+
+
+        World monde = new World();
+        monde.setLongueur(10);
+        monde.setLargeur(10);
+        monde.creerMondeAlea(2, 2, 2, 2, 2, 2, 2, 1, 1);
+
+        new InterfaceGraphique(monde);
+        monde.affiche();
     }
 }
+
+
