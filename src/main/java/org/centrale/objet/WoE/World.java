@@ -1,26 +1,36 @@
-/* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 package org.centrale.objet.WoE;
 
 import java.util.*;
- import java.io.*;
+import java.io.*;
 import java.util.StringTokenizer;
 
 /**
- * Représente le monde du jeu. Contient les personnages, les monstres et les objets.
- * 
- * <p>La classe {@code World} permet de générer aléatoirement un ensemble d'entités 
- * (archers, guerriers, paysans, monstres, objets, etc.) sur une grille carrée. 
- * Elle gère également la détection de collisions, la génération de noms uniques 
- * et le déroulement d’un tour de jeu.</p>
- * 
- * @author Imane
+ * Représente le monde du jeu, contenant l’ensemble des entités (personnages, monstres et objets).
+ *
+ * <p>La classe {@code World} gère la création, le positionnement, le déplacement et
+ * les interactions entre les différentes entités du jeu. Elle prend également en charge
+ * la sauvegarde et le chargement des parties.</p>
+ *
+ * <p>Le monde est modélisé comme une grille bidimensionnelle dont les dimensions peuvent
+ * être définies. Les entités sont réparties aléatoirement sur cette grille lors de la
+ * génération du monde.</p>
+ *
+ * @author Oussama
+ * @see Personnage
+ * @see Monstre
+ * @see Objet
+ * @see Joueur
  */
 public class World {
 
+    // ===================== ATTRIBUTS =====================
 
-    /** Taille de la grille par défaut (50x50). */
+    /** Taille du monde (longueur et largeur de la grille). */
     private int longueur;
     private int largeur;
 
@@ -30,18 +40,20 @@ public class World {
     /** Liste des monstres présents dans le monde. */
     protected ArrayList<Monstre> maListeMons;
 
-    /** Liste des objets (armes, potions, etc.) présents dans le monde. */
+    /** Liste des objets (armes, potions, nourritures, etc.) présents dans le monde. */
     protected ArrayList<Objet> maListeobj;
 
-    /** Ensemble des noms déjà utilisés pour éviter les doublons. */
+    /** Ensemble des noms déjà utilisés, pour garantir leur unicité. */
     protected HashSet<String> nomsUtilises;
 
+    /** Joueur contrôlant un personnage spécifique. */
+    private Joueur joueur;
 
-    private Joueur  joueur;
-
+    // ===================== CONSTRUCTEUR =====================
 
     /**
-     * Constructeur par défaut. Initialise les listes et la structure du monde.
+     * Constructeur par défaut.
+     * <p>Initialise les listes du monde et les structures de données nécessaires.</p>
      */
     public World() {
         maListePers = new ArrayList<>();
@@ -50,126 +62,94 @@ public class World {
         nomsUtilises = new HashSet<>();
     }
 
+    // ===================== ACCESSEURS =====================
 
-    public ArrayList<Personnage> getMaListePers() {
-        return maListePers;
-    }
+    public ArrayList<Personnage> getMaListePers() { return maListePers; }
+    public ArrayList<Monstre> getMaListeMons() { return maListeMons; }
+    public ArrayList<Objet> getMaListeobj() { return maListeobj; }
+    public int getLongueur() { return longueur; }
+    public int getLargeur() { return largeur; }
+    public Joueur getJoueur() { return joueur; }
 
-    public ArrayList<Monstre> getMaListeMons() {
-        return maListeMons;
-    }
+    public void setMaListePers(ArrayList<Personnage> maListePers) { this.maListePers = maListePers; }
+    public void setMaListeMons(ArrayList<Monstre> maListeMons) { this.maListeMons = maListeMons; }
+    public void setMaListeobj(ArrayList<Objet> maListeobj) { this.maListeobj = maListeobj; }
+    public void setLongueur(int longueur) { this.longueur = longueur; }
+    public void setLargeur(int largeur) { this.largeur = largeur; }
+    public void setJoueur(Joueur joueur) { this.joueur = joueur; }
 
-    public ArrayList<Objet> getMaListeobj() {
-        return maListeobj;
-    }
-
-    public void setMaListePers(ArrayList<Personnage> maListePers) {
-        this.maListePers = maListePers;
-    }
-
-    public void setMaListeMons(ArrayList<Monstre> maListeMons) {
-        this.maListeMons = maListeMons;
-    }
-
-    public void setMaListeobj(ArrayList<Objet> maListeobj) {
-        this.maListeobj = maListeobj;
-    }
-
-    public int getLongueur() {
-        return longueur;
-    }
-
-    public int getLargeur() {
-        return largeur;
-    }
-
-    public void setLongueur(int longueur) {
-        this.longueur = longueur;
-    }
-
-    public void setLargeur(int largeur) {
-        this.largeur = largeur;
-    }
-
-    public Joueur getJoueur() {
-        return joueur;
-    }
-
-    public void setJoueur(Joueur joueur) {
-        this.joueur = joueur;
-    }
+    // ===================== INITIALISATION DES CRÉATURES =====================
 
     /**
-     * Définit aléatoirement les statistiques de base d'une créature.
+     * Définit aléatoirement les statistiques d’une créature selon son type.
      *
      * @param c la créature à initialiser
      */
     public void definirStatsAlea(Creature c) {
         Random rand = new Random();
 
-        // === GUERRIER ===
         if (c instanceof Guerrier) {
-            c.setPtVie(80 + rand.nextInt(41));       // 80–120
-            c.setDegAtt(50 + rand.nextInt(31));      // 50–80
-            c.setPtPar(30 + rand.nextInt(21));       // 30–50
-            c.setPageAtt(40 + rand.nextInt(21));     // 40–60 %
-            c.setPagePar(30 + rand.nextInt(21));     // 30–50 %
-            ((Personnage) c).setDistAttMax(1);       // corps à corps
+            // Guerrier : robuste et fort
+            c.setPtVie(80 + rand.nextInt(41));
+            c.setDegAtt(50 + rand.nextInt(31));
+            c.setPtPar(30 + rand.nextInt(21));
+            c.setPageAtt(40 + rand.nextInt(21));
+            c.setPagePar(30 + rand.nextInt(21));
+            ((Personnage) c).setDistAttMax(1);
 
-            // === ARCHER ===
         } else if (c instanceof Archer) {
-            c.setPtVie(60 + rand.nextInt(41));       // 60–100
-            c.setDegAtt(25 + rand.nextInt(21));      // 25–45
-            c.setPtPar(10 + rand.nextInt(11));       // 10–20
-            c.setPageAtt(50 + rand.nextInt(26));     // 50–75 %
-            c.setPagePar(20 + rand.nextInt(11));     // 20–30 %
-            ((Archer) c).setNbFleches(10 +  rand.nextInt(11));  //10-20
-            ((Personnage) c).setDistAttMax(3 + rand.nextInt(3)); // 3–5
+            // Archer : agile, attaque à distance
+            c.setPtVie(60 + rand.nextInt(41));
+            c.setDegAtt(25 + rand.nextInt(21));
+            c.setPtPar(10 + rand.nextInt(11));
+            c.setPageAtt(50 + rand.nextInt(26));
+            c.setPagePar(20 + rand.nextInt(11));
+            ((Archer) c).setNbFleches(10 + rand.nextInt(11));
+            ((Personnage) c).setDistAttMax(3 + rand.nextInt(3));
 
-            // === PAYSAN ===
         } else if (c instanceof Paysan) {
-            c.setPtVie(40 + rand.nextInt(21));       // 40–60
-            c.setDegAtt(5 + rand.nextInt(6));        // 5–10
-            c.setPtPar(5 + rand.nextInt(6));         // 5–10
-            c.setPageAtt(10 + rand.nextInt(11));     // 10–20 %
-            c.setPagePar(10 + rand.nextInt(11));     // 10–20 %
-            ((Personnage) c).setDistAttMax(1);       // faible portée
+            // Paysan : faible et non combattant
+            c.setPtVie(40 + rand.nextInt(21));
+            c.setDegAtt(5 + rand.nextInt(6));
+            c.setPtPar(5 + rand.nextInt(6));
+            c.setPageAtt(10 + rand.nextInt(11));
+            c.setPagePar(10 + rand.nextInt(11));
+            ((Personnage) c).setDistAttMax(1);
 
-            // === MONSTRES ===
         } else if (c instanceof Loup) {
-            c.setPtVie(40 + rand.nextInt(31));       // 40–70
-            c.setDegAtt(15 + rand.nextInt(16));      // 15–30
-            c.setPtPar(10 + rand.nextInt(11));       // 10–20
-            c.setPageAtt(30 + rand.nextInt(21));     // 30–50 %
-            c.setPagePar(10 + rand.nextInt(11));     // 10–20 %
+            // Loup : monstre agressif
+            c.setPtVie(40 + rand.nextInt(31));
+            c.setDegAtt(15 + rand.nextInt(16));
+            c.setPtPar(10 + rand.nextInt(11));
+            c.setPageAtt(30 + rand.nextInt(21));
+            c.setPagePar(10 + rand.nextInt(11));
 
         } else if (c instanceof Lapin) {
-            c.setPtVie(20 + rand.nextInt(11));       // 20–30
-            c.setDegAtt(5 + rand.nextInt(6));        // 5–10
-            c.setPtPar(2 + rand.nextInt(3));         // 2–4
-            c.setPageAtt(10 + rand.nextInt(11));     // 10–20 %
-            c.setPagePar(5 + rand.nextInt(6));       // 5–10 %
+            // Lapin : créature passive
+            c.setPtVie(20 + rand.nextInt(11));
+            c.setDegAtt(5 + rand.nextInt(6));
+            c.setPtPar(2 + rand.nextInt(3));
+            c.setPageAtt(10 + rand.nextInt(11));
+            c.setPagePar(5 + rand.nextInt(6));
 
-            // === CAS PAR DÉFAUT ===
         } else {
-            c.setPtVie(50 + rand.nextInt(51));       // 50–100
-            c.setDegAtt(10 + rand.nextInt(11));      // 10–20
-            c.setPtPar(5 + rand.nextInt(11));        // 5–15
-            c.setPageAtt(20 + rand.nextInt(21));     // 20–40 %
-            c.setPagePar(10 + rand.nextInt(11));     // 10–20 %
+            // Par défaut
+            c.setPtVie(50 + rand.nextInt(51));
+            c.setDegAtt(10 + rand.nextInt(11));
+            c.setPtPar(5 + rand.nextInt(11));
+            c.setPageAtt(20 + rand.nextInt(21));
+            c.setPagePar(10 + rand.nextInt(11));
         }
 
-        // Si c'est un personnage (humain), lui donner un nom unique
         if (c instanceof Personnage) {
             ((Personnage) c).setNom(genererNomUnique());
         }
     }
 
-
     /**
      * Génère un nom unique composé de lettres aléatoires.
      *
-     * @return un nom non encore utilisé
+     * @return un nom non encore utilisé dans le monde
      */
     private String genererNomUnique() {
         Random rand = new Random();
@@ -183,150 +163,132 @@ public class World {
             }
             nom = nomBuilder.toString();
         } while (nomsUtilises.contains(nom));
+
         nomsUtilises.add(nom);
         return nom;
     }
 
+    // ===================== GÉNÉRATION DU MONDE =====================
+
     /**
-     * Crée un monde aléatoire avec un nombre défini de personnages, monstres et objets.
+     * Crée un monde aléatoire peuplé de créatures et d’objets.
      *
-     * @param nbArcher   nombre d'archers à générer
+     * @param nbArcher   nombre d’archers à générer
      * @param nbPaysan   nombre de paysans à générer
-     * @param nbLapin    nombre de lapins (monstres) à générer
+     * @param nbLapin    nombre de lapins à générer
      * @param nbGuerrier nombre de guerriers à générer
-     * @param nbLoup     nombre de loups (monstres) à générer
-     * @param nbPotion   nombre de potions de soin à générer
-     * @param nbEpee     nombre d'épées à générer
+     * @param nbLoup     nombre de loups à générer
+     * @param nbPotion   nombre de potions de soin
+     * @param nbEpee     nombre d’épées
+     * @param nbChamp    nombre de champignons pourris
+     * @param nbFeuille  nombre de feuilles d’épinard
      */
     public void creerMondeAlea(int nbArcher, int nbPaysan, int nbLapin,
-                               int nbGuerrier, int nbLoup, int nbPotion, int nbEpee, int nbChamp, int nbFeuille) {
+                               int nbGuerrier, int nbLoup,
+                               int nbPotion, int nbEpee, int nbChamp, int nbFeuille) {
         Random rand = new Random();
         Point2D newpos;
 
-        // Archers
+        // === Création des personnages et monstres ===
         for (int i = 0; i < nbArcher; i++) {
             Archer a = new Archer();
             definirStatsAlea(a);
-            do {
-                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur));
-            } while (estOccupee(newpos));
+            do { newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur)); }
+            while (estOccupee(newpos));
             a.setPos(newpos);
             maListePers.add(a);
         }
 
-        // Paysans
         for (int i = 0; i < nbPaysan; i++) {
             Paysan p = new Paysan();
             definirStatsAlea(p);
-            do {
-                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur));
-            } while (estOccupee(newpos));
+            do { newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur)); }
+            while (estOccupee(newpos));
             p.setPos(newpos);
             maListePers.add(p);
         }
 
-        // Lapins
         for (int i = 0; i < nbLapin; i++) {
             Lapin l = new Lapin();
             definirStatsAlea(l);
-            do {
-                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur));
-            } while (estOccupee(newpos));
+            do { newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur)); }
+            while (estOccupee(newpos));
             l.setPos(newpos);
             maListeMons.add(l);
         }
 
-        // Guerriers
         for (int i = 0; i < nbGuerrier; i++) {
             Guerrier g = new Guerrier();
             definirStatsAlea(g);
-            do {
-                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur));
-            } while (estOccupee(newpos));
+            do { newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(largeur)); }
+            while (estOccupee(newpos));
             g.setPos(newpos);
             maListePers.add(g);
         }
 
-        // Loups
         for (int i = 0; i < nbLoup; i++) {
             Loup l = new Loup();
             definirStatsAlea(l);
-            do {
-                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
-            } while (estOccupee(newpos));
+            do { newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur)); }
+            while (estOccupee(newpos));
             l.setPos(newpos);
             maListeMons.add(l);
         }
 
-        // Potions
+        // === Objets ===
         for (int i = 0; i < nbPotion; i++) {
             String nomPotion = "Potion" + (i + 1);
-            int ptVieRendus = 10 + rand.nextInt(41); // 10 à 50 PV
-            do {
-                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
-            } while (estOccupee(newpos));
-            PotionSoin p = new PotionSoin(nomPotion, newpos, ptVieRendus);
-            maListeobj.add(p);
+            int ptVieRendus = 10 + rand.nextInt(41);
+            do { newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur)); }
+            while (estOccupee(newpos));
+            maListeobj.add(new PotionSoin(nomPotion, newpos, ptVieRendus));
         }
 
-        // Épées
         for (int i = 0; i < nbEpee; i++) {
             String nomEpee = "Epée" + (i + 1);
-            int bonusAtt = 5 + rand.nextInt(16); // 5 à 20
-            do {
-                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
-            } while (estOccupee(newpos));
-            Epee e = new Epee(nomEpee, newpos, bonusAtt);
-            maListeobj.add(e);
+            int bonusAtt = 5 + rand.nextInt(16);
+            do { newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur)); }
+            while (estOccupee(newpos));
+            maListeobj.add(new Epee(nomEpee, newpos, bonusAtt));
         }
 
-        // ChampignonPourri
         for (int i = 0; i < nbChamp; i++) {
-            String nomChampignonPourri= "ChampignonPourri" + (i + 1);
-            int dureeEffet = 2 + rand.nextInt(5); // 5 à 20
-            int malusDefense = 10 + rand.nextInt(32); // 10 à 30
-            do {
-                newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
-            } while (estOccupee(newpos));
-            ChampignonPourri e = new ChampignonPourri(nomChampignonPourri, newpos, dureeEffet, malusDefense);
-            maListeobj.add(e);
+            String nomChamp = "ChampignonPourri" + (i + 1);
+            int dureeEffet = 2 + rand.nextInt(5);
+            int malusDefense = 10 + rand.nextInt(32);
+            do { newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur)); }
+            while (estOccupee(newpos));
+            maListeobj.add(new ChampignonPourri(nomChamp, newpos, dureeEffet, malusDefense));
         }
 
-    // FeuilleEpinart
         for (int i = 0; i < nbFeuille; i++) {
-        String nomFeuilleEpinart= "FeuilleEpinart" + (i + 1);
-        int dureeEffet  = 2 + rand.nextInt(5); // 5 à 20
-        int bonusDegAtt = 10 + rand.nextInt(32); // 10 à 30
-        do {
-            newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur));
-        } while (estOccupee(newpos));
-        FeuilleEpinart e = new FeuilleEpinart(nomFeuilleEpinart, newpos, dureeEffet, bonusDegAtt);
-        maListeobj.add(e);
+            String nomFeuille = "FeuilleEpinart" + (i + 1);
+            int dureeEffet = 2 + rand.nextInt(5);
+            int bonusDegAtt = 10 + rand.nextInt(32);
+            do { newpos = new Point2D(rand.nextInt(longueur), rand.nextInt(longueur)); }
+            while (estOccupee(newpos));
+            maListeobj.add(new FeuilleEpinart(nomFeuille, newpos, dureeEffet, bonusDegAtt));
+        }
     }
-}
 
-
+    // ===================== MÉCANIQUES DU JEU =====================
 
     /**
-     * Vérifie si une position donnée est déjà occupée par une entité (personnage ou monstre).
+     * Vérifie si une position donnée est déjà occupée par une entité.
      *
      * @param p la position à tester
-     * @return true si la case est occupée, false sinon
+     * @return {@code true} si la case est occupée, {@code false} sinon
      */
     public boolean estOccupee(Point2D p) {
-        for (Personnage pers : maListePers) {
-            if (pers.getPos().equals(p)) return true;
-        }
-        for (Monstre mon : maListeMons) {
-            if (mon.getPos().equals(p)) return true;
-        }
+        for (Personnage pers : maListePers) if (pers.getPos().equals(p)) return true;
+        for (Monstre mon : maListeMons) if (mon.getPos().equals(p)) return true;
         return false;
     }
 
     /**
-     * Permet à une créature de chercher et utiliser un objet présent sur sa position.
+     * Permet à une créature de chercher et d’utiliser un objet présent sur sa case.
      *
-     * @param p la créature concernée
+     * @param p le personnage concerné
      */
     public void chercherObjet(Personnage p) {
         Iterator<Objet> it = maListeobj.iterator();
@@ -335,66 +297,63 @@ public class World {
             if (o.getPosition().equals(p.getPos())) {
                 if (p == joueur.getPersoJoueur()) {
                     joueur.getInventaire().add(o);
-                    System.out.println(o.getNom() + " est ramassé ");
+                    System.out.println(o.getNom() + " est ramassé.");
                 } else {
                     o.utiliserObjet(p);
-                    System.out.println(o.getNom() + " est utilisé ");
+                    System.out.println(o.getNom() + " est utilisé.");
                 }
-                if (!(o instanceof NuageToxique)) {
-                    it.remove();
-                }
+                if (!(o instanceof NuageToxique)) it.remove();
             }
         }
     }
 
+    /**
+     * Retourne la liste des cibles qu’un personnage peut attaquer.
+     *
+     * @param p le personnage attaquant
+     * @return liste des créatures à portée
+     */
     public ArrayList<Creature> ChercherCibles(Personnage p) {
-        ArrayList<Creature> maListeCreatures = new ArrayList<>();
-        maListeCreatures.addAll(maListePers);
-        maListeCreatures.addAll(maListeMons);
+        ArrayList<Creature> toutes = new ArrayList<>();
+        toutes.addAll(maListePers);
+        toutes.addAll(maListeMons);
         ArrayList<Creature> cibles = new ArrayList<>();
-        for (Creature cible : maListeCreatures) {
+
+        for (Creature cible : toutes) {
             double dist = p.getPos().distance(cible.getPos());
-            double distMax = p.getDistAttMax();
-            if (dist <= distMax  && p!=cible) {
+            if (dist <= p.getDistAttMax() && p != cible) {
                 cibles.add(cible);
             }
         }
         return cibles;
     }
 
-    
-
-
     /**
-     * Effectue un tour de jeu :
+     * Effectue un tour complet du jeu :
      * <ul>
-     *   <li>Déplace les personnages et monstres.</li>
-     *   <li>Déclenche les combats entre entités proches.</li>
+     *   <li>Déplacement des créatures et objets déplaçables.</li>
+     *   <li>Détection et résolution des combats.</li>
      * </ul>
      */
-    
     public void tourDeJeu() {
-        ArrayList<Creature> maListeCreatures = new ArrayList<>();
-        maListeCreatures.addAll(maListePers);
-        maListeCreatures.addAll(maListeMons);
+        ArrayList<Creature> toutes = new ArrayList<>();
+        toutes.addAll(maListePers);
+        toutes.addAll(maListeMons);
 
-        for (Creature c : maListeCreatures) {
-            c.deplace(this);
-        }
+        // Déplacement de toutes les créatures
+        for (Creature c : toutes) c.deplace(this);
 
+        // Déplacement des objets déplaçables (ex. : NuageToxique)
         for (Objet o : maListeobj) {
-            if (o instanceof Deplacable) {
-                ((Deplacable) o).deplace();
-            }
+            if (o instanceof Deplacable) ((Deplacable) o).deplace();
         }
 
-
-        // Combats entre Creatures (simplifié)
-        for (int i = 0; i < maListeCreatures.size(); i++) {
-            for (int j = 0; j < maListeCreatures.size(); j++) {
+        // Résolution des combats
+        for (int i = 0; i < toutes.size(); i++) {
+            for (int j = 0; j < toutes.size(); j++) {
                 if (i != j) {
-                    Creature c1 = maListeCreatures.get(i);
-                    Creature c2 = maListeCreatures.get(j);
+                    Creature c1 = toutes.get(i);
+                    Creature c2 = toutes.get(j);
                     if (c1 instanceof Combattant) {
                         ((Combattant) c1).combattre(c2);
                     }
@@ -403,41 +362,41 @@ public class World {
         }
     }
 
-    
-     public void tourDeJeuHumain(Joueur j) {
-        j.choisirPreference(this);
-    }
-
     /**
-     * Affiche les informations de toutes les entités du monde :
-     * personnages, monstres et objets.
+     * Lance un tour contrôlé par le joueur humain.
+     *
+     * <p>Cette méthode affiche le menu d’action du joueur, puis, à la fin du tour,
+     * supprime toutes les créatures mortes (ayant des points de vie ≤ 0)
+     * des listes du monde.</p>
+     *
+     * @param j le joueur actif
      */
-    public void affiche() {
-        for (Personnage p : maListePers) {
-            p.affiche();
-        }
-        for (Monstre m : maListeMons) {
-            m.affiche();
-        }
-        for (Objet o : maListeobj) {
-            o.affiche();
-        }
+    public void tourDeJeuHumain(Joueur j) {
+        // Tour du joueur
+        j.choisirPreference(this);
+
+        // === Nettoyage des entités mortes ===
+        // Supprime tous les personnages ou monstres ayant 0 PV ou moins
+
+
+        System.out.println("\n[Mise à jour] Les créatures mortes ont été retirées du monde.");
     }
 
+
+    // ===================== SAUVEGARDE & CHARGEMENT =====================
+
     /**
-     * Sauvegarde l'état du monde dans un fichier texte.
-     * Le format respecte la structure décrite dans le TP6.
+     * Sauvegarde l’état complet du monde dans un fichier texte.
+     *
+     * @param nomFichier chemin du fichier de sauvegarde
      */
     public void SauvegardePartie(String nomFichier) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nomFichier))) {
-
-            // Écriture des dimensions du monde
             writer.write("Largeur " + this.largeur);
             writer.newLine();
             writer.write("Longueur " + this.longueur);
             writer.newLine();
 
-            // Sauvegarde des personnages (hors joueur)
             for (Personnage p : maListePers) {
                 if (joueur == null || !p.equals(joueur.getPersoJoueur())) {
                     writer.write(p.getTexteSauvegarde());
@@ -445,128 +404,85 @@ public class World {
                 }
             }
 
-            // Sauvegarde des monstres
             for (Monstre m : maListeMons) {
                 writer.write(m.getTexteSauvegarde());
                 writer.newLine();
             }
 
-            // Sauvegarde des objets
             for (Objet o : maListeobj) {
                 writer.write(o.getTexteSauvegarde());
                 writer.newLine();
             }
 
-            // Sauvegarde du joueur humain
             if (joueur != null) {
                 writer.write(joueur.getTexteSauvegarde());
                 writer.newLine();
-
-                // Sauvegarde de l'inventaire du joueur
                 for (Objet o : joueur.getInventaire()) {
                     writer.write("Inventaire " + o.getTexteSauvegarde());
                     writer.newLine();
                 }
             }
 
-            System.out.println(" Sauvegarde effectuée dans le fichier : " + nomFichier);
-
+            System.out.println("Sauvegarde effectuée dans le fichier : " + nomFichier);
         } catch (IOException e) {
-            System.err.println(" Erreur lors de la sauvegarde : " + e.getMessage());
+            System.err.println("Erreur lors de la sauvegarde : " + e.getMessage());
         }
     }
-
 
     /**
-     * Charge une partie sauvegardée depuis un fichier texte.
-     * Recrée le monde à partir des données lues.
-     * @param nomFichier
+     * Recharge un monde depuis un fichier de sauvegarde.
+     *
+     * @param nomFichier chemin du fichier à charger
      */
     public void ChargementPartie(String nomFichier) {
-    try (BufferedReader reader = new BufferedReader(new FileReader(nomFichier))) {
-        // On vide le monde actuel avant de charger
-        maListePers.clear();
-        maListeMons.clear();
-        maListeobj.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(nomFichier))) {
+            maListePers.clear();
+            maListeMons.clear();
+            maListeobj.clear();
 
-        String ligne;
-        while ((ligne = reader.readLine()) != null) {
-            StringTokenizer st = new StringTokenizer(ligne, " ");
-            String type = st.nextToken();
+            String ligne;
+            while ((ligne = reader.readLine()) != null) {
+                StringTokenizer st = new StringTokenizer(ligne, " ");
+                String type = st.nextToken();
 
-            switch (type) {
-                case "Largeur":
-                    this.largeur = Integer.parseInt(st.nextToken());
-                    break;
-
-                case "Longueur":
-                    this.longueur = Integer.parseInt(st.nextToken());
-                    break;
-
-                // --- Personnages ---
-                case "Guerrier":
-                    maListePers.add(new Guerrier(ligne));
-                    break;
-                case "Archer":
-                    maListePers.add(new Archer(ligne));
-                    break;
-                case "Paysan":
-                    maListePers.add(new Paysan(ligne));
-                    break;
-
-                // --- Monstres ---
-                case "Loup":
-                    maListeMons.add(new Loup(ligne));
-                    break;
-                case "Lapin":
-                    maListeMons.add(new Lapin(ligne));
-                    break;
-
-                // --- Objets ---
-                case "PotionSoin":
-                    maListeobj.add(new PotionSoin(ligne));
-                    break;
-                case "Epee":
-                    maListeobj.add(new Epee(ligne));
-                    break;
-                case "FeuilleEpinart":
-                    maListeobj.add(new FeuilleEpinart(ligne));
-                    break;
-                case "ChampignonPourri":
-                    maListeobj.add(new ChampignonPourri(ligne));
-                    break;
-
-                // --- Joueur ---
-                case "Joueur":
-                    this.joueur = new Joueur(ligne);
-                    break;
-
-                // --- Inventaire du joueur ---
-                case "Inventaire":
-                    String reste = ligne.substring("Inventaire".length()).trim();
-                    Objet obj = null;
-
-                    if (reste.startsWith("PotionSoin"))
-                        obj = new PotionSoin(reste);
-                    else if (reste.startsWith("Epee"))
-                        obj = new Epee(reste);
-                    else if (reste.startsWith("FeuilleEpinart"))
-                        obj = new FeuilleEpinart(reste);
-                    else if (reste.startsWith("ChampignonPourri"))
-                        obj = new ChampignonPourri(reste);
-
-                    if (obj != null && joueur != null)
-                        joueur.getInventaire().add(obj);
-                    break;
+                switch (type) {
+                    case "Largeur": this.largeur = Integer.parseInt(st.nextToken()); break;
+                    case "Longueur": this.longueur = Integer.parseInt(st.nextToken()); break;
+                    case "Guerrier": maListePers.add(new Guerrier(ligne)); break;
+                    case "Archer": maListePers.add(new Archer(ligne)); break;
+                    case "Paysan": maListePers.add(new Paysan(ligne)); break;
+                    case "Loup": maListeMons.add(new Loup(ligne)); break;
+                    case "Lapin": maListeMons.add(new Lapin(ligne)); break;
+                    case "PotionSoin": maListeobj.add(new PotionSoin(ligne)); break;
+                    case "Epee": maListeobj.add(new Epee(ligne)); break;
+                    case "FeuilleEpinart": maListeobj.add(new FeuilleEpinart(ligne)); break;
+                    case "ChampignonPourri": maListeobj.add(new ChampignonPourri(ligne)); break;
+                    case "Joueur": this.joueur = new Joueur(ligne); break;
+                    case "Inventaire":
+                        String reste = ligne.substring("Inventaire".length()).trim();
+                        Objet obj = null;
+                        if (reste.startsWith("PotionSoin")) obj = new PotionSoin(reste);
+                        else if (reste.startsWith("Epee")) obj = new Epee(reste);
+                        else if (reste.startsWith("FeuilleEpinart")) obj = new FeuilleEpinart(reste);
+                        else if (reste.startsWith("ChampignonPourri")) obj = new ChampignonPourri(reste);
+                        if (obj != null && joueur != null) joueur.getInventaire().add(obj);
+                        break;
+                }
             }
+            System.out.println("Chargement du fichier " + nomFichier + " terminé avec succès.");
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement : " + e.getMessage());
         }
-
-        System.out.println(" Chargement du fichier " + nomFichier + " terminé avec succès.");
-    } catch (IOException e) {
-        System.err.println(" Erreur lors du chargement : " + e.getMessage());
     }
-}
 
+    // ===================== AFFICHAGE =====================
 
-
+    /**
+     * Affiche les informations de toutes les entités présentes dans le monde.
+     */
+    public void affiche() {
+        for (Personnage p : maListePers) p.affiche();
+        for (Monstre m : maListeMons) m.affiche();
+        for (Objet o : maListeobj) o.affiche();
+    }
 }

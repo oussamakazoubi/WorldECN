@@ -4,12 +4,12 @@
  */
 
 package org.centrale.objet.WoE;
-import java.util.StringTokenizer; 
+import java.util.StringTokenizer;
 import java.util.Random;
 
 /**
  * Représente une créature générique du monde {@link World}.
- * 
+ *
  * <p>Une créature possède des caractéristiques communes telles que :</p>
  * <ul>
  *   <li>Ses points de vie ({@code ptVie})</li>
@@ -18,9 +18,9 @@ import java.util.Random;
  *   <li>Ses chances d’attaque et de parade ({@code pageAtt}, {@code pagePar})</li>
  *   <li>Sa position dans le monde ({@link Point2D pos})</li>
  * </ul>
- * 
+ *
  * <p>Cette classe sert de classe mère pour les personnages et les monstres du jeu.</p>
- * 
+ *
  * @author Imane
  */
 public class Creature implements Deplacable{
@@ -46,7 +46,7 @@ public class Creature implements Deplacable{
 
     /**
      * Constructeur avec paramètres.
-     * 
+     *
      * @param pV Points de vie
      * @param dA Dégâts d’attaque
      * @param pPar Points de parade
@@ -65,7 +65,7 @@ public class Creature implements Deplacable{
 
     /**
      * Constructeur de copie.
-     * 
+     *
      * @param c Créature à copier
      */
     public Creature(Creature c) {
@@ -79,7 +79,7 @@ public class Creature implements Deplacable{
     public Creature() {
         this(0, 0, 0, 0, 0, new Point2D(0, 0));
     }
-    
+
     /**
  * Initialise les attributs communs d'une créature à partir d'un StringTokenizer.
  * Utilisé par les constructeurs des sous-classes lors du chargement.
@@ -179,13 +179,13 @@ protected void chargerDepuisTokenizer(StringTokenizer st) {
 
     /**
      * Déplace la créature dans le monde aléatoirement, en évitant les cases occupées.
-     * 
+     *
      * <p>Si la nouvelle position est libre, la créature s’y déplace et vérifie
      * la présence d’un objet sur cette case via {@link World#chercherObjet(Creature)}.</p>
-     * 
+     *
      * @param monde le monde dans lequel la créature évolue
      */
-    
+
     public void deplace(World monde){
         int dx, dy;
         Random rand = new Random();
@@ -204,7 +204,7 @@ protected void chargerDepuisTokenizer(StringTokenizer st) {
 
     /**
      * Retourne une représentation textuelle complète de la créature et de ses caractéristiques.
-     * 
+     *
      * @return une chaîne contenant les valeurs de tous les attributs
      */
     @Override
@@ -223,15 +223,39 @@ protected void chargerDepuisTokenizer(StringTokenizer st) {
     public void affiche() {
         System.out.println(this);
     }
-    
+
     /**
- * Retourne la partie commune de la ligne de sauvegarde pour une créature.
- * Ex: "100 50 20 60 30 10 5"
- */
-protected String getTexteSauvegardeCommun() {
-    return ptVie + " " + degAtt + " " + ptPar + " " +
-           pageAtt + " " + pagePar + " " +
-           pos.getX() + " " + pos.getY();
-}
+     * Retourne la partie commune de la ligne de sauvegarde pour une créature.
+     * Ex: "100 50 20 60 30 10 5"
+     */
+    protected String getTexteSauvegardeCommun() {
+        return ptVie + " " + degAtt + " " + ptPar + " " +
+               pageAtt + " " + pagePar + " " +
+               pos.getX() + " " + pos.getY();
+    }
+
+
+    /**
+     * Vérifie si la créature est morte (points de vie <= 0) et la retire du monde si nécessaire.
+     *
+     * <p>Cette méthode doit être appelée après chaque combat ou perte de points de vie.
+     * Elle affiche un message indiquant la mort de la créature et la supprime
+     * des listes correspondantes du monde ({@link World#getMaListePers()} ou
+     * {@link World#getMaListeMons()}).</p>
+     *
+     * @param monde le monde dans lequel se trouve la créature
+     */
+    public void checkMort(World monde) {
+        if (this.ptVie <= 0) {
+            System.out.println(this.getClass().getSimpleName() + " est mort !");
+
+            // Suppression de la créature du monde
+            if (this instanceof Personnage p) {
+                monde.getMaListePers().remove(p);
+            } else if (this instanceof Monstre m) {
+                monde.getMaListeMons().remove(m);
+            }
+        }
+    }
 
 }
