@@ -5,7 +5,7 @@
 
 package org.centrale.objet.WoE;
 
-import java.util.Scanner;
+
 
 /**
  * Classe principale contenant la méthode {@code main} pour lancer le jeu World of ECN.
@@ -32,6 +32,7 @@ import java.util.Scanner;
 public class TestWoE {
 
     public static void main(String[] args) {
+
 
         
 /*
@@ -76,19 +77,8 @@ public class TestWoE {
     }*/
     
 
-
-        World monde = new World();
-        monde.setLongueur(10);
-        monde.setLargeur(10);
-        monde.creerMondeAlea(2, 2, 2, 2, 2, 2, 2, 1, 1);
-
-        new InterfaceGraphique(monde);
-        monde.affiche();
-    
-
-
+                MainMenu.startGame();
             
-
 }
 }
 
