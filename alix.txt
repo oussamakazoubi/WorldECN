@@ -1,0 +1,20 @@
+Largeur 20
+Longueur 20
+Archer ejf 79 36 20 75 23 4 11 16 12
+Archer gskcyyd 63 40 15 66 22 5 16 13 1
+Paysan pclxi 58 8 5 13 11 1 11 8
+Paysan eij 52 5 7 14 12 1 0 3
+Guerrier pusmbk 92 57 38 45 50 1 0 14
+Guerrier occptgj 86 51 48 59 32 1 17 11
+Lapin 25 8 2 17 6 14 12
+Lapin 30 6 3 13 10 19 13
+Lapin 20 7 3 12 8 1 17
+Loup 51 16 13 49 16 0 16
+Loup 61 22 13 34 13 6 3
+PotionSoin Potion1 13 13 19
+PotionSoin Potion2 15 12 18
+Epee Epée1 6 10 8
+Epee Epée2 7 13 10
+ChampignonPourri ChampignonPourri1 15 0 4 10
+FeuilleEpinart Feuille d’épinard 1 7 3 2
+Joueur Archer imane 85 25 17 55 25 1 2 4 14

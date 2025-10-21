@@ -24,6 +24,8 @@ import java.util.Random;
  * @author Imane
  */
 public class Creature implements Deplacable{
+    private World monde;
+
 
     /** Points de vie de la créature. */
     private int ptVie;
@@ -79,6 +81,9 @@ public class Creature implements Deplacable{
     public Creature() {
         this(0, 0, 0, 0, 0, new Point2D(0, 0));
     }
+    
+  //  public void setMonde(World monde) { this.monde = monde; }
+   // public World getMonde() { return monde; }
 
     /**
  * Initialise les attributs communs d'une créature à partir d'un StringTokenizer.

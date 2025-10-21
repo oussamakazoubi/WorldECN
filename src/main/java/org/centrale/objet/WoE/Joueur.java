@@ -227,9 +227,10 @@ public class Joueur {
         Scanner scanner = new Scanner(System.in);
         String choix;
 
-        Joueur.afficherGrille(monde, this);
+        
 
         do {
+            Joueur.afficherGrille(monde, this);
             System.out.println("""
                 === MENU DU JOUEUR ===
                 1 = Se déplacer
@@ -253,7 +254,8 @@ public class Joueur {
 
             switch (choix) {
                 case "1", "deplacer" -> this.deplaceJoueur(monde);
-                case "2", "combattre" -> this.combattreJoueur(monde);
+                case "2", "combattre" -> {this.combattreJoueur(monde);
+                                          monde.nettoyerCreaturesMortes(); }
                 case "3", "Tour Suivante" -> monde.tourDeJeu();
                 case "4", "Inventaire" -> utiliserObjetInventaire();
                 case "5", "Afficher monde" -> monde.affiche();
@@ -443,7 +445,7 @@ public class Joueur {
      * @param monde  le monde à afficher
      * @param joueur le joueur actif (pour distinguer son personnage)
      */
-    public static void afficherGrille(World monde, Joueur joueur) {
+   /* public static void afficherGrille(World monde, Joueur joueur) {
         int longueur = monde.getLongueur();
         int largeur = monde.getLargeur();
 
@@ -490,5 +492,123 @@ public class Joueur {
             System.out.println();
         }
         System.out.println("========================\n");
+    }*/
+    /**
+ * Affiche la grille du monde sous forme de caractères, avec une légende détaillée.
+ *
+ * Symboles utilisés :
+ *  J  : Joueur (personnage contrôlé par l'utilisateur)
+ *  A  : Archer (PNJ)
+ *  G  : Guerrier (PNJ)
+ *  p  : Paysan (PNJ)
+ *  P  : Autre personnage générique (si d'autres sous-classes existent)
+ *  L  : Loup (monstre)
+ *  r  : Lapin (monstre)
+ *  M  : Monstre générique
+ *  H  : Potion de soin (Heal)
+ *  E  : Épée
+ *  F  : Feuille d'épinard
+ *  C  : Champignon pourri
+ *  X  : Nuage toxique / objet déplaçable toxique
+ *  O  : Objet générique
+ *
+ * Priorité d'affichage si plusieurs entités sur une même case :
+ *  Joueur > Personnage non-joueur > Monstre > Objet
+ *
+ * @param monde  le monde à afficher
+ * @param joueur le joueur actif (pour distinguer son personnage)
+ */
+public static void afficherGrille(World monde, Joueur joueur) {
+    int longueur = monde.getLongueur();
+    int largeur = monde.getLargeur();
+
+    // grille de chaînes pour pouvoir avoir 1 ou 2 caractères par case
+    String[][] grille = new String[largeur][longueur];
+    for (int y = 0; y < largeur; y++) {
+        for (int x = 0; x < longueur; x++) {
+            grille[y][x] = ". "; // case vide (avec un espace pour alignement)
+        }
     }
+
+    // ===== Placement des objets (les objets ont la plus faible priorité d'affichage) =====
+    for (Objet o : monde.getMaListeobj()) {
+        if (o.getPosition() == null) continue;
+        int x = o.getPosition().getX();
+        int y = o.getPosition().getY();
+        String sym = "O ";
+        if (o instanceof PotionSoin) sym = "H "; // Heal
+        else if (o instanceof Epee) sym = "E ";
+        else if (o instanceof FeuilleEpinart) sym = "F ";
+        else if (o instanceof ChampignonPourri) sym = "C ";
+        else if (o instanceof NuageToxique) sym = "X ";
+        // n'écrase que le vide pour garder priorité
+        if (grille[y][x].equals(". ")) grille[y][x] = sym;
+    }
+
+    // ===== Placement des monstres (écrase objets si nécessaire) =====
+    for (Monstre m : monde.getMaListeMons()) {
+        if (m.getPos() == null) continue;
+        int x = m.getPos().getX();
+        int y = m.getPos().getY();
+        String sym = "M ";
+        if (m instanceof Loup) sym = "L ";
+        else if (m instanceof Lapin) sym = "r ";
+        // écrase l'objet éventuel
+        grille[y][x] = sym;
+    }
+
+    // ===== Placement des personnages non-joueurs (écrase monstres/objets) =====
+    for (Personnage p : monde.getMaListePers()) {
+        if (p.getPos() == null) continue;
+        int x = p.getPos().getX();
+        int y = p.getPos().getY();
+
+        // Si c'est le personnage du joueur, on traitera ensuite (priorité)
+        if (joueur != null && joueur.getPersoJoueur() == p) {
+            continue;
+        }
+
+        String sym = "P ";
+        if (p instanceof Archer) sym = "A ";
+        else if (p instanceof Guerrier) sym = "G ";
+        else if (p instanceof Paysan) sym = "p ";
+        // écrase ce qu'il y avait (monstre ou objet)
+        grille[y][x] = sym;
+    }
+
+    // ===== Placement du joueur (plus haute priorité) =====
+    if (joueur != null && joueur.getPersoJoueur() != null && joueur.getPersoJoueur().getPos() != null) {
+        int x = joueur.getPersoJoueur().getPos().getX();
+        int y = joueur.getPersoJoueur().getPos().getY();
+        grille[y][x] = "J ";
+    }
+
+    // ===== Légende détaillée =====
+    System.out.println("\n=== LÉGENDE DE LA CARTE ===");
+    System.out.println("J  : Joueur (votre personnage)");
+    System.out.println("A  : Archer (personnage non-joueur)");
+    System.out.println("G  : Guerrier (personnage non-joueur)");
+    System.out.println("p  : Paysan (personnage non-joueur)");
+    System.out.println("L  : Loup (monstre)");
+    System.out.println("r  : Lapin (monstre)");
+    System.out.println("H  : Potion de soin (Heal)");
+    System.out.println("E  : Épée");
+    System.out.println("F  : Feuille d'épinard");
+    System.out.println("C  : Champignon pourri");
+    System.out.println("X  : Nuage toxique (objet mobile)");
+    System.out.println(".  : Case vide\n");
+
+    // ===== Affichage de la grille =====
+    System.out.println("=== CARTE DU MONDE ===");
+    // on affiche de haut en bas (y = largeur-1 -> 0) comme dans la version initiale
+    for (int y = largeur - 1; y >= 0; y--) {
+        StringBuilder ligne = new StringBuilder();
+        for (int x = 0; x < longueur; x++) {
+            ligne.append(grille[y][x]);
+        }
+        System.out.println(ligne.toString());
+    }
+    System.out.println("========================\n");
+}
+
 }

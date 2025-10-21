@@ -27,6 +27,8 @@ import java.util.StringTokenizer;
  * @see Joueur
  */
 public class World {
+    private World monde;
+
 
     // ===================== ATTRIBUTS =====================
 
@@ -48,6 +50,8 @@ public class World {
 
     /** Joueur contrôlant un personnage spécifique. */
     private Joueur joueur;
+    
+    
 
     // ===================== CONSTRUCTEUR =====================
 
@@ -77,7 +81,8 @@ public class World {
     public void setLongueur(int longueur) { this.longueur = longueur; }
     public void setLargeur(int largeur) { this.largeur = largeur; }
     public void setJoueur(Joueur joueur) { this.joueur = joueur; }
-
+    public void setMonde(World monde) { this.monde = monde; }
+    public World getMonde() { return monde; }
     // ===================== INITIALISATION DES CRÉATURES =====================
 
     /**
@@ -197,6 +202,7 @@ public class World {
             while (estOccupee(newpos));
             a.setPos(newpos);
             maListePers.add(a);
+           
         }
 
         for (int i = 0; i < nbPaysan; i++) {
@@ -374,14 +380,35 @@ public class World {
     public void tourDeJeuHumain(Joueur j) {
         // Tour du joueur
         j.choisirPreference(this);
+        
 
-        // === Nettoyage des entités mortes ===
-        // Supprime tous les personnages ou monstres ayant 0 PV ou moins
+      
 
 
         System.out.println("\n[Mise à jour] Les créatures mortes ont été retirées du monde.");
     }
 
+    /**
+ * Nettoie toutes les créatures mortes du monde.
+ * Retire les personnages et monstres ayant des points de vie <= 0.
+ */
+    public void nettoyerCreaturesMortes() {
+      int avantPers = maListePers.size();
+        int avantMons = maListeMons.size();
+    
+    // Supprimer les personnages morts
+    maListePers.removeIf(perso -> perso.getPtVie() <= 0);
+    
+    // Supprimer les monstres morts
+    maListeMons.removeIf(monstre -> monstre.getPtVie() <= 0);
+    
+    int mortsPers = avantPers - maListePers.size();
+    int mortsMons = avantMons - maListeMons.size();
+    
+    if (mortsPers > 0 || mortsMons > 0) {
+        System.out.println("[Nettoyage] " + mortsPers + " personnage(s) et " + mortsMons + " monstre(s) mort(s) retirés.");
+    }
+}
 
     // ===================== SAUVEGARDE & CHARGEMENT =====================
 

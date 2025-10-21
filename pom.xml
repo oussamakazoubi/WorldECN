@@ -30,8 +30,7 @@
  <archive>
  <manifest>
  <addClasspath>true</addClasspath>
- <mainClass>NOM.DE.CLASSE.COMPLET
- Doit intégrer les packages !
+ <mainClass>org.centrale.objet.WoE.TestWoE
  </mainClass>
  </manifest>
  </archive>

@@ -1,0 +1,18 @@
+Largeur 20
+Longueur 20
+Archer zzct 99 30 18 68 26 4 11 9 10
+Archer kenf 92 37 16 55 26 3 12 13 15
+Paysan zywo 52 8 9 13 11 1 15 13
+Guerrier ileyq 102 59 32 40 37 1 8 11
+Guerrier sqtp 82 66 34 50 36 1 13 1
+Lapin 27 10 3 17 7 16 8
+Lapin 24 9 2 15 6 14 6
+Lapin 30 8 3 11 9 12 7
+Loup 42 25 20 37 15 13 2
+Loup 60 19 20 41 14 19 19
+PotionSoin Potion2 29 11 11
+Epee Epée1 12 0 8
+Epee Epée2 20 12 3
+ChampignonPourri ChampignonPourri1 13 6 5 39
+FeuilleEpinart Feuille d’épinard 16 13 3 2
+Joueur Archer luna 89 36 18 72 26 2 2 5 15

@@ -122,68 +122,74 @@ public class Archer extends Personnage implements Combattant {
      * @param c la créature ciblée par l’attaque
      */
     public void combattre(Creature c) {
-        Random rand = new Random();
-        int degatsSubis = 0;
-        double dist = this.getPos().distance(c.getPos());
-        System.out.println("Tentative de combat ");
-        System.out.println("L’ennemi a " + c.getPtVie() + " points de vie.");
+    Random rand = new Random();
+    int degatsSubis = 0;
+    double dist = this.getPos().distance(c.getPos());
+    System.out.println("Tentative de combat ");
+    System.out.println("L’ennemi a " + c.getPtVie() + " points de vie.");
 
-        // Combat corps à corps
-        if (dist == 1) {
-            System.out.println("Le combat au corps à corps débute !");
-            int jetAttaque = rand.nextInt(100) + 1;
+    // Combat corps à corps
+    if (dist == 1) {
+        System.out.println("Le combat au corps à corps débute !");
+        int jetAttaque = rand.nextInt(100) + 1;
 
-            if (jetAttaque > this.getPageAtt()) {
-                System.out.println("Attaque ratée");
-            } else {
-                System.out.println("Attaque réussie");
-                int jetParade = rand.nextInt(100) + 1;
-
-                if (jetParade > c.getPagePar()) {
-                    System.out.println("La défense a échoué !");
-                    degatsSubis = this.getDegAtt();
-                    System.out.println(" - " + degatsSubis + " Damage");
-                } else {
-                    System.out.println(" - " + this.getDegAtt() + " Damage & "
-                            + c.getPtPar() + " Dmg Resiste = " + (this.getDegAtt() - c.getPtPar()) + " Damage");
-                    degatsSubis = this.getDegAtt() - c.getPtPar();
-                }
-
-                degatsSubis = Math.max(0, degatsSubis);
-                c.setPtVie(c.getPtVie() - degatsSubis);
-
-                System.out.println("Dégâts infligés au défenseur : " + degatsSubis);
-                System.out.println("PV restants du défenseur : " + c.getPtVie());
-            }
-        }
-
-        // Combat à distance
-        else if (nbFleches > 0 && dist > 1 && dist < this.getDistAttMax()) {
-            System.out.println("Le combat à distance a commencé !");
-            System.out.println("Archer a " + this.nbFleches + " flèches");
-            System.out.println("L’archer tire une flèche !");
-            this.nbFleches--;
-
-            int jetAttaque = rand.nextInt(100) + 1;
-            if (jetAttaque > this.getPageAtt()) {
-                System.out.println("Attaque à distance ratée");
-            } else {
-                degatsSubis = this.getDegAtt();
-                c.setPtVie(c.getPtVie() - degatsSubis);
-                System.out.println("Tir réussi ! Dégâts infligés : " + degatsSubis);
-            }
-
-            System.out.println("PV restants du défenseur : " + c.getPtVie());
-            System.out.println("Flèches restantes : " + this.nbFleches);
-        }
-
-        // Aucun tir possible
-        else if (nbFleches <= 0 && dist > 1) {
-            System.out.println("Impossible d’attaquer à distance : plus de flèches !");
+        if (jetAttaque > this.getPageAtt()) {
+            System.out.println("Attaque ratée");
         } else {
-            System.out.println("\nEnnemi trop éloigné pour le combat !");
+            System.out.println("Attaque réussie");
+            int jetParade = rand.nextInt(100) + 1;
+
+            if (jetParade > c.getPagePar()) {
+                System.out.println("La défense a échoué !");
+                degatsSubis = this.getDegAtt();
+                System.out.println(" - " + degatsSubis + " Damage");
+            } else {
+                System.out.println(" - " + this.getDegAtt() + " Damage & "
+                        + c.getPtPar() + " Dmg Resiste = " + (this.getDegAtt() - c.getPtPar()) + " Damage");
+                degatsSubis = this.getDegAtt() - c.getPtPar();
+            }
+
+            // Empêcher PV négatifs
+            degatsSubis = Math.max(0, degatsSubis);
+            c.setPtVie(Math.max(c.getPtVie() - degatsSubis, 0));
+
+            System.out.println("Dégâts infligés au défenseur : " + degatsSubis);
+            System.out.println("PV restants du défenseur : " + c.getPtVie());
+
+            
         }
     }
+
+    // Combat à distance
+    else if (nbFleches > 0 && dist > 1 && dist < this.getDistAttMax()) {
+        System.out.println("Le combat à distance a commencé !");
+        System.out.println("Archer a " + this.nbFleches + " flèches");
+        System.out.println("L’archer tire une flèche !");
+        this.nbFleches--;
+
+        int jetAttaque = rand.nextInt(100) + 1;
+        if (jetAttaque > this.getPageAtt()) {
+            System.out.println("Attaque à distance ratée");
+        } else {
+            degatsSubis = this.getDegAtt();
+            c.setPtVie(Math.max(c.getPtVie() - degatsSubis, 0));
+            System.out.println("Tir réussi ! Dégâts infligés : " + degatsSubis);
+
+          
+        }
+
+        System.out.println("PV restants du défenseur : " + c.getPtVie());
+        System.out.println("Flèches restantes : " + this.nbFleches);
+    }
+
+    // Aucun tir possible
+    else if (nbFleches <= 0 && dist > 1) {
+        System.out.println("Impossible d’attaquer à distance : plus de flèches !");
+    } else {
+        System.out.println("\nEnnemi trop éloigné pour le combat !");
+    }
+}
+
 
     // ===================== SAUVEGARDE =====================
 

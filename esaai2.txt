@@ -1,0 +1,20 @@
+Largeur 20
+Longueur 20
+Archer eonvoi 80 36 16 65 27 4 13 12 6
+Archer iyx 63 36 15 59 25 4 16 7 7
+Paysan kocr 45 6 7 12 16 1 10 14
+Paysan ffncx 45 6 5 19 10 1 15 1
+Guerrier qhlvmr 107 65 43 51 41 1 1 17
+Guerrier qldflf 82 62 33 58 30 1 8 19
+Lapin 24 5 3 11 10 14 2
+Lapin 27 8 3 12 9 3 1
+Lapin 20 10 2 17 6 4 10
+Loup 64 21 12 49 11 3 14
+Loup 61 25 17 34 20 9 7
+PotionSoin Potion1 18 7 9
+PotionSoin Potion2 23 3 16
+Epee Epée1 6 8 16
+Epee Epée2 9 11 19
+ChampignonPourri ChampignonPourri1 16 19 2 37
+FeuilleEpinart Feuille d’épinard 5 12 3 2
+Joueur Guerrier luna 97 74 30 54 34 0 0 1

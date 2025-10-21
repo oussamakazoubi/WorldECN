@@ -1,4 +1,4 @@
-/*
+/*.
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -35,8 +35,8 @@ public class TestWoE {
 
 
         
-/*
-        System.out.println("=== Lancement du jeu World of ECN ===");
+
+       /* System.out.println("=== Lancement du jeu World of ECN ===");
 
         // --- Création du monde ---
         World monde = new World();
@@ -44,7 +44,7 @@ public class TestWoE {
         monde.setLargeur(20);
 
         // --- Création du joueur ---
-        Joueur joueur = new Joueur("Imane", "Imane123", "imane@ecn.fr", 1234);
+        Joueur joueur = new Joueur();
         joueur.ChoisirPersonnage(monde);
         monde.setJoueur(joueur);
 
@@ -57,27 +57,26 @@ public class TestWoE {
                 2, // nb Loups
                 2, // nb Potions
                 2, // nb Épées
-                1, // nb ChampignonsPourris
+                1, // nb ChampigarchernonsPourris
                 1  // nb Feuilles d’épinard
         );
 
         System.out.println("\n=== Monde initial créé ===");
-        monde.affiche();
+        monde.affiche();*/
         
-        //Scanner scan= new Scanner();
-        
+           MainMenu.startGame();
 
-        // --- Déroulement de quelques tours ---
+        /*// --- Déroulement de quelques tours ---
         System.out.println("\n=== Début du jeu ===");
         for (int i = 0; i < 2; i++) {
             System.out.println("\n--- Tour " + (i + 1) + " ---");
             monde.tourDeJeuHumain(joueur);
         }
         System.out.println("\n=== Fin du test ===");
-    }*/
+    */
     
 
-                MainMenu.startGame();
+            
             
 }
 }
