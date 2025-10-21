@@ -1,5 +1,5 @@
 package database;
-
+/*
 public class TestElementDB {
     public static void main(String[] args) {
         try {
@@ -15,3 +15,4 @@ public class TestElementDB {
         }
     }
 }
+*/

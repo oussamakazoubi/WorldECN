@@ -36,9 +36,6 @@ public class MainMenu {
                     joueur = new Joueur();
                     System.out.print("Entrez votre nom : ");
                     joueur.setNom(scanner.nextLine());
-                    System.out.print("Entrez votre pseudo : ");
-                    joueur.setPseudo(scanner.nextLine());
-
                     joueur.ChoisirPersonnage(monde);
                     monde.setJoueur(joueur);
 

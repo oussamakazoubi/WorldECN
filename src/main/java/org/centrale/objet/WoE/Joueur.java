@@ -227,9 +227,10 @@ public class Joueur {
         Scanner scanner = new Scanner(System.in);
         String choix;
 
-        Joueur.afficherGrille(monde, this);
+
 
         do {
+            Joueur.afficherGrille(monde, this);
             System.out.println("""
                 === MENU DU JOUEUR ===
                 1 = Se déplacer
@@ -463,7 +464,15 @@ public class Joueur {
             if (joueur != null && joueur.getPersoJoueur() == p) {
                 grille[y][x] = 'J'; // Joueur
             } else {
-                grille[y][x] = 'P'; // Autre personnage
+                if (p instanceof Paysan) {
+                    grille[y][x] = 'P';
+                }
+                if (p instanceof Archer) {
+                    grille[y][x] = 'A';
+                }
+                if (p instanceof Guerrier) {
+                    grille[y][x] = 'G';
+                }
             }
         }
 
@@ -471,14 +480,34 @@ public class Joueur {
             if (m.getPos() == null) continue;
             int x = m.getPos().getX();
             int y = m.getPos().getY();
-            grille[y][x] = 'M';
+            if (m instanceof Loup) {
+                grille[y][x] = 'L';
+            }
+            if (m instanceof Lapin) {
+                grille[y][x] = 'R';
+            }
+
         }
 
         for (Objet o : monde.getMaListeobj()) {
             if (o.getPosition() == null) continue;
             int x = o.getPosition().getX();
             int y = o.getPosition().getY();
-            grille[y][x] = 'O';
+            if (o instanceof Epee) {
+                grille[y][x] = 'e';
+            }
+            if (o instanceof PotionSoin) {
+                grille[y][x] = 'p';
+            }
+            if (o instanceof ChampignonPourri) {
+                grille[y][x] = 'c';
+            }
+            if (o instanceof FeuilleEpinart) {
+                grille[y][x] = 'f';
+            }
+            if (o instanceof NuageToxique) {
+                grille[y][x] = 'N';
+            }
         }
 
         // === Affichage de la grille ===
@@ -489,6 +518,22 @@ public class Joueur {
             }
             System.out.println();
         }
+        System.out.println("========================\n");
+
+        // === Légende ===
+        System.out.println("\n=== LÉGENDE ===");
+        System.out.println("J : Joueur");
+        System.out.println("G : Guerrier");
+        System.out.println("A : Archer");
+        System.out.println("P : Paysan");
+        System.out.println("L : Loup");
+        System.out.println("R : Lapin");
+        System.out.println("e : Épée");
+        System.out.println("p : Potion de soin");
+        System.out.println("c : Champignon pourri");
+        System.out.println("f : Feuille d’épinard");
+        System.out.println("N : Nuage toxique");
+        System.out.println(". : Case vide");
         System.out.println("========================\n");
     }
 }
