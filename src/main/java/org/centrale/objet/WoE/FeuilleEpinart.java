@@ -30,11 +30,11 @@ public class FeuilleEpinart extends Nourriture {
      * @param nom nom de la nourriture
      * @param position position de la nourriture sur la carte
      * @param dureeEffet durée de l’effet en tours
-     * @param bpnusDegAtt bonus d’attaque conféré par la feuille
+     * @param bonusDegAtt bonus d’attaque conféré par la feuille
      */
-    public FeuilleEpinart(String nom, Point2D position, int dureeEffet, int bpnusDegAtt) {
-        super("Feuille d’épinard", position, 3); // effet dure 3 tours par défaut
-        this.bonusDegAtt = 2;
+    public FeuilleEpinart(String nom, Point2D position, int dureeEffet, int bonusDegAtt) {
+        super(nom, position, dureeEffet);
+        this.bonusDegAtt = bonusDegAtt;
     }
 
     /**

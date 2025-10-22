@@ -28,7 +28,7 @@ import java.io.File;
  *   <li><b>.</b> : case vide</li>
  * </ul>
  *
- * @author Imane
+ * @author Oussama
  */
 public class TestWoE {
 

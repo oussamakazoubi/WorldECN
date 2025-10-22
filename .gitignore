@@ -6,3 +6,4 @@ mvnw
 notes.txt
 pom.xml
 *.txt
+.idea/database/

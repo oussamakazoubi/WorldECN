@@ -4,6 +4,7 @@
  */
 
 package org.centrale.objet.WoE;
+
 import java.util.StringTokenizer;
 import java.util.Random;
 
@@ -19,11 +20,11 @@ import java.util.Random;
  *   <li>Sa position dans le monde ({@link Point2D pos})</li>
  * </ul>
  *
- * <p>Cette classe sert de classe mère pour les personnages et les monstres du jeu.</p>
+ * <p>Cette classe sert de classe mère pour les {@link Personnage} et {@link Monstre}.</p>
  *
- * @author Imane
+ * @author Oussama
  */
-public class Creature implements Deplacable{
+public class Creature implements Deplacable {
 
     /** Points de vie de la créature. */
     private int ptVie;
@@ -43,16 +44,17 @@ public class Creature implements Deplacable{
     /** Position de la créature dans le monde. */
     private Point2D pos;
 
+    // ===================== CONSTRUCTEURS =====================
 
     /**
-     * Constructeur avec paramètres.
+     * Constructeur complet avec paramètres.
      *
-     * @param pV Points de vie
-     * @param dA Dégâts d’attaque
-     * @param pPar Points de parade
-     * @param paAtt Pourcentage de chance d’attaque
-     * @param paPar Pourcentage de chance de parade
-     * @param p Position initiale de la créature
+     * @param pV points de vie
+     * @param dA dégâts d’attaque
+     * @param pPar points de parade
+     * @param paAtt pourcentage de réussite d’attaque
+     * @param paPar pourcentage de réussite de parade
+     * @param p position initiale de la créature
      */
     public Creature(int pV, int dA, int pPar, int paAtt, int paPar, Point2D p) {
         this.ptVie = pV;
@@ -66,7 +68,7 @@ public class Creature implements Deplacable{
     /**
      * Constructeur de copie.
      *
-     * @param c Créature à copier
+     * @param c créature à copier
      */
     public Creature(Creature c) {
         this(c.ptVie, c.degAtt, c.ptPar, c.pageAtt, c.pagePar, c.pos);
@@ -74,140 +76,114 @@ public class Creature implements Deplacable{
 
     /**
      * Constructeur par défaut.
-     * <p>Initialise tous les attributs à 0 et positionne la créature à (0,0).</p>
+     * <p>Initialise tous les attributs à 0 et positionne la créature en (0,0).</p>
      */
     public Creature() {
         this(0, 0, 0, 0, 0, new Point2D(0, 0));
     }
 
     /**
- * Initialise les attributs communs d'une créature à partir d'un StringTokenizer.
- * Utilisé par les constructeurs des sous-classes lors du chargement.
- */
-protected void chargerDepuisTokenizer(StringTokenizer st) {
-    this.ptVie = Integer.parseInt(st.nextToken());
-    this.degAtt = Integer.parseInt(st.nextToken());
-    this.ptPar = Integer.parseInt(st.nextToken());
-    this.pageAtt = Integer.parseInt(st.nextToken());
-    this.pagePar = Integer.parseInt(st.nextToken());
-    int x = Integer.parseInt(st.nextToken());
-    int y = Integer.parseInt(st.nextToken());
-    this.pos = new Point2D(x, y);
-}
+     * Initialise les attributs communs d'une créature à partir d'un {@link StringTokenizer}.
+     * <p>Utilisé par les constructeurs des sous-classes lors du chargement depuis un fichier texte.</p>
+     *
+     * @param st tokenizer contenant les valeurs dans l’ordre :
+     *            ptVie, degAtt, ptPar, pageAtt, pagePar, x, y
+     */
+    protected void chargerDepuisTokenizer(StringTokenizer st) {
+        this.ptVie = Integer.parseInt(st.nextToken());
+        this.degAtt = Integer.parseInt(st.nextToken());
+        this.ptPar = Integer.parseInt(st.nextToken());
+        this.pageAtt = Integer.parseInt(st.nextToken());
+        this.pagePar = Integer.parseInt(st.nextToken());
+        int x = Integer.parseInt(st.nextToken());
+        int y = Integer.parseInt(st.nextToken());
+        this.pos = new Point2D(x, y);
+    }
 
-    // --- Getters et Setters ---
+    // ===================== GETTERS & SETTERS =====================
 
     /** @return les points de vie actuels de la créature */
-    public int getPtVie() {
-        return ptVie;
-    }
+    public int getPtVie() { return ptVie; }
 
     /** @param ptVie nouveaux points de vie */
-    public void setPtVie(int ptVie) {
-        this.ptVie = ptVie;
-    }
+    public void setPtVie(int ptVie) { this.ptVie = ptVie; }
 
     /** @return les dégâts d’attaque */
-    public int getDegAtt() {
-        return degAtt;
-    }
+    public int getDegAtt() { return degAtt; }
 
     /** @param degAtt nouveaux dégâts d’attaque */
-    public void setDegAtt(int degAtt) {
-        this.degAtt = degAtt;
-    }
+    public void setDegAtt(int degAtt) { this.degAtt = degAtt; }
 
     /** @return les points de parade */
-    public int getPtPar() {
-        return ptPar;
-    }
+    public int getPtPar() { return ptPar; }
 
     /** @param ptPar nouveaux points de parade */
-    public void setPtPar(int ptPar) {
-        this.ptPar = ptPar;
-    }
+    public void setPtPar(int ptPar) { this.ptPar = ptPar; }
 
     /** @return le pourcentage de réussite d’attaque */
-    public int getPageAtt() {
-        return pageAtt;
-    }
+    public int getPageAtt() { return pageAtt; }
 
     /** @param pageAtt nouveau pourcentage de réussite d’attaque */
-    public void setPageAtt(int pageAtt) {
-        this.pageAtt = pageAtt;
-    }
+    public void setPageAtt(int pageAtt) { this.pageAtt = pageAtt; }
 
     /** @return le pourcentage de réussite de parade */
-    public int getPagePar() {
-        return pagePar;
-    }
+    public int getPagePar() { return pagePar; }
 
     /** @param pagePar nouveau pourcentage de réussite de parade */
-    public void setPagePar(int pagePar) {
-        this.pagePar = pagePar;
-    }
+    public void setPagePar(int pagePar) { this.pagePar = pagePar; }
 
     /** @return la position actuelle de la créature */
-    public Point2D getPos() {
-        return pos;
-    }
+    public Point2D getPos() { return pos; }
 
     /** @param pos nouvelle position de la créature */
-    public void setPos(Point2D pos) {
-        this.pos = pos;
-    }
+    public void setPos(Point2D pos) { this.pos = pos; }
 
-    // --- Méthodes de déplacement ---
-
+    // ===================== DÉPLACEMENT =====================
 
     /**
-     * Déplace la créature d’un pas aléatoire (entre -1 et +1 en x et y).
-     * <p>Le déplacement continue tant que les deux coordonnées sont nulles
-     * (la créature doit effectivement bouger).</p>
+     * Déplace la créature d’un pas aléatoire (entre -1 et +1 sur les axes x et y).
+     * <p>Le déplacement est relancé tant que la créature ne change pas de position.</p>
      */
-
     @Override
     public void deplace() {
         Random rand = new Random();
         int dx = rand.nextInt(3) - 1;
         int dy = rand.nextInt(3) - 1;
-        if (dx==0 && dy==0) this.deplace();
+        if (dx == 0 && dy == 0) this.deplace();
         else this.getPos().translate(dx, dy);
     }
 
-
-
     /**
-     * Déplace la créature dans le monde aléatoirement, en évitant les cases occupées.
+     * Déplace la créature dans le monde de façon aléatoire, en évitant les cases occupées.
      *
      * <p>Si la nouvelle position est libre, la créature s’y déplace et vérifie
      * la présence d’un objet sur cette case via {@link World#chercherObjet(Creature)}.</p>
      *
      * @param monde le monde dans lequel la créature évolue
      */
-
-    public void deplace(World monde){
+    public void deplace(World monde) {
         int dx, dy;
-        int count=0;
+        int count = 0;
         Random rand = new Random();
         Point2D newpos;
-        do{
+        do {
             dx = rand.nextInt(3) - 1;
             dy = rand.nextInt(3) - 1;
             newpos = new Point2D(this.pos.getX() + dx, this.pos.getY() + dy);
             count++;
-        }while(monde.estOccupee(newpos) || (dx==0 && dy==0) && count<50);
-        if (count<50) {this.pos=newpos;}
+        } while ((monde.estOccupee(newpos) || (dx == 0 && dy == 0)) && count < 50);
+
+        if (count < 50) {
+            this.pos = newpos;
+        }
     }
 
-
-
-    // --- Méthodes utilitaires ---
+    // ===================== MÉTHODES UTILITAIRES =====================
 
     /**
      * Retourne une représentation textuelle complète de la créature et de ses caractéristiques.
      *
-     * @return une chaîne contenant les valeurs de tous les attributs
+     * @return chaîne décrivant les valeurs de tous les attributs
      */
     @Override
     public String toString() {
@@ -228,17 +204,18 @@ protected void chargerDepuisTokenizer(StringTokenizer st) {
 
     /**
      * Retourne la partie commune de la ligne de sauvegarde pour une créature.
-     * Ex: "100 50 20 60 30 10 5"
+     * <p>Exemple : {@code "100 50 20 60 30 10 5"}</p>
+     *
+     * @return chaîne représentant les valeurs communes à sauvegarder
      */
     protected String getTexteSauvegardeCommun() {
         return ptVie + " " + degAtt + " " + ptPar + " " +
-               pageAtt + " " + pagePar + " " +
-               pos.getX() + " " + pos.getY();
+                pageAtt + " " + pagePar + " " +
+                pos.getX() + " " + pos.getY();
     }
 
-
     /**
-     * Vérifie si la créature est morte (points de vie <= 0) et la retire du monde si nécessaire.
+     * Vérifie si la créature est morte (points de vie ≤ 0) et la retire du monde si nécessaire.
      *
      * <p>Cette méthode doit être appelée après chaque combat ou perte de points de vie.
      * Elle affiche un message indiquant la mort de la créature et la supprime
@@ -250,8 +227,6 @@ protected void chargerDepuisTokenizer(StringTokenizer st) {
     public void checkMort(World monde) {
         if (this.ptVie <= 0) {
             System.out.println(this.getClass().getSimpleName() + " est mort !");
-
-            // Suppression de la créature du monde
             if (this instanceof Personnage p) {
                 monde.getMaListePers().remove(p);
             } else if (this instanceof Monstre m) {
@@ -259,5 +234,4 @@ protected void chargerDepuisTokenizer(StringTokenizer st) {
             }
         }
     }
-
 }

@@ -2,7 +2,35 @@ package org.centrale.objet.WoE;
 
 import java.util.Scanner;
 
+/**
+ * Classe principale gérant le menu textuel du jeu <b>World of ECN</b>.
+ *
+ * <p>Elle permet au joueur de :</p>
+ * <ul>
+ *   <li>Démarrer une nouvelle partie</li>
+ *   <li>Charger une partie sauvegardée</li>
+ *   <li>Quitter le jeu</li>
+ * </ul>
+ *
+ * <p>Cette classe constitue le point d’entrée du mode console du jeu.</p>
+ *
+ * @author Oussama
+ * @see World
+ * @see Joueur
+ */
 public class MainMenu {
+
+    /**
+     * Lance le menu principal du jeu et gère les interactions avec le joueur.
+     *
+     * <p>Le joueur peut choisir entre :
+     * <ul>
+     *   <li><b>Nouvelle partie</b> — crée un nouveau monde, un joueur et son personnage.</li>
+     *   <li><b>Charger partie</b> — charge une sauvegarde depuis un fichier texte.</li>
+     *   <li><b>Quitter</b> — termine le programme.</li>
+     * </ul>
+     * </p>
+     */
     public static void startGame() {
         System.out.println("=== Lancement du jeu World of ECN ===");
         Scanner scanner = new Scanner(System.in);
@@ -75,7 +103,6 @@ public class MainMenu {
 
                     System.out.println("Partie chargée avec succès depuis " + fichier);
 
-
                     monde.tourDeJeuHumain(joueur);
                 }
 
@@ -87,6 +114,5 @@ public class MainMenu {
                 default -> System.out.println("Choix invalide. Veuillez réessayer !");
             }
         }
-
     }
 }

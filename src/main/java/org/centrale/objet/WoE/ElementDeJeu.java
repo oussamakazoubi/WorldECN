@@ -46,7 +46,8 @@ public class ElementDeJeu {
     // ===================== ACCESSEURS =====================
 
     /**
-     * Retourne la position actuelle de l’élément (copie défensive).
+     * Retourne la position actuelle de l’élément.
+     * <p>Une copie défensive est renvoyée pour éviter toute modification externe directe.</p>
      *
      * @return une nouvelle instance de {@link Point2D} représentant la position
      */
@@ -55,7 +56,8 @@ public class ElementDeJeu {
     }
 
     /**
-     * Définit la position de l’élément (copie défensive).
+     * Définit la position de l’élément.
+     * <p>Une copie défensive est créée pour garantir l’intégrité des données.</p>
      *
      * @param position nouvelle position à assigner
      */
@@ -66,7 +68,7 @@ public class ElementDeJeu {
     // ===================== MÉTHODES GÉNÉRALES =====================
 
     /**
-     * Déplace l’élément en ajoutant un déplacement relatif.
+     * Déplace l’élément en ajoutant un déplacement relatif à sa position actuelle.
      *
      * @param dx déplacement sur l’axe X
      * @param dy déplacement sur l’axe Y
@@ -79,7 +81,7 @@ public class ElementDeJeu {
     /**
      * Calcule la distance euclidienne entre cet élément et un autre.
      *
-     * @param other un autre élément du jeu
+     * @param other autre élément du jeu dont on veut connaître la distance
      * @return la distance euclidienne entre les deux éléments
      */
     public double distance(ElementDeJeu other) {
@@ -88,12 +90,12 @@ public class ElementDeJeu {
 
     /**
      * Retourne une représentation textuelle de l’élément,
-     * indiquant sa classe et sa position.
+     * indiquant son type et sa position actuelle.
      *
      * @return une chaîne décrivant la position de l’élément
      */
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + " at " + position;
+        return this.getClass().getSimpleName() + " à la position " + position;
     }
 }

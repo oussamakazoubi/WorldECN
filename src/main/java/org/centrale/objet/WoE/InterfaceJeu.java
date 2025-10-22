@@ -1,3 +1,8 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
 package org.centrale.objet.WoE;
 
 import javax.swing.*;
@@ -6,6 +11,30 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Classe {@code InterfaceJeu} représentant l’interface graphique principale du jeu <b>World of ECN</b>.
+ *
+ * <p>Elle affiche la grille du monde, les informations sur le joueur et les créatures voisines,
+ * et permet d’interagir avec le jeu via des boutons et des touches du clavier.</p>
+ *
+ * <h2>Fonctionnalités principales :</h2>
+ * <ul>
+ *   <li>Affichage graphique du monde (grille avec personnages, monstres et objets).</li>
+ *   <li>Déplacement du joueur via le clavier (touches ZQSD / flèches directionnelles).</li>
+ *   <li>Boutons d’action : tour de jeu, combat, inventaire, sauvegarde et quitter.</li>
+ *   <li>Chargement et suppression de sauvegardes existantes.</li>
+ *   <li>Création de nouvelles parties avec génération aléatoire du monde.</li>
+ * </ul>
+ *
+ * <p>Les éléments du monde sont redessinés en temps réel après chaque action ou déplacement.
+ * Les statistiques du joueur et des créatures proches sont également mises à jour.</p>
+ *
+ * @author Oussama
+ * @see World
+ * @see Joueur
+ * @see Personnage
+ * @see Creature
+ */
 public class InterfaceJeu extends JFrame implements KeyListener {
 
     private final World monde;
@@ -14,6 +43,13 @@ public class InterfaceJeu extends JFrame implements KeyListener {
     private final JTextArea statsJoueur;
     private final JTextArea statsCreature;
 
+    /**
+     * Constructeur principal de l’interface graphique.
+     * <p>Initialise la fenêtre, la grille, les panneaux d’informations et les boutons d’action.</p>
+     *
+     * @param monde  le monde dans lequel le jeu se déroule
+     * @param joueur le joueur associé à la partie en cours
+     */
     public InterfaceJeu(World monde, Joueur joueur) {
         this.monde = monde;
         this.joueur = joueur;
@@ -23,7 +59,7 @@ public class InterfaceJeu extends JFrame implements KeyListener {
         setSize(1000, 700);
         setLayout(new BorderLayout());
 
-        // === Center: world grid ===
+        // === Panneau central : Grille du monde ===
         grillePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -34,7 +70,7 @@ public class InterfaceJeu extends JFrame implements KeyListener {
         grillePanel.setPreferredSize(new Dimension(600, 600));
         add(grillePanel, BorderLayout.CENTER);
 
-        // === Right: Stats ===
+        // === Panneau droit : Informations joueur et créature ===
         JPanel infoPanel = new JPanel(new GridLayout(2, 1));
         statsJoueur = new JTextArea();
         statsJoueur.setEditable(false);
@@ -44,7 +80,7 @@ public class InterfaceJeu extends JFrame implements KeyListener {
         infoPanel.add(new JScrollPane(statsCreature));
         add(infoPanel, BorderLayout.EAST);
 
-        // === Bottom: Controls ===
+        // === Panneau bas : Contrôles ===
         JPanel controlPanel = new JPanel();
         JButton tourBtn = new JButton("Tour de jeu");
         JButton combattreBtn = new JButton("Combattre");
@@ -59,19 +95,18 @@ public class InterfaceJeu extends JFrame implements KeyListener {
         controlPanel.add(quitterBtn);
         add(controlPanel, BorderLayout.SOUTH);
 
-        // === Keyboard listener ===
+        // === Gestion clavier ===
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
 
-        // === Button actions ===
+        // === Actions des boutons ===
         tourBtn.addActionListener(e -> {
             monde.tourDeJeu();
             refresh();
         });
 
         combattreBtn.addActionListener(e -> combattreCible());
-
         inventaireBtn.addActionListener(e -> ouvrirInventaire());
 
         sauvegarderBtn.addActionListener(e -> {
@@ -90,17 +125,20 @@ public class InterfaceJeu extends JFrame implements KeyListener {
                     JOptionPane.YES_NO_OPTION
             );
             if (confirm == JOptionPane.YES_OPTION) {
-                dispose(); // close current window
-                TestWoE.main(null); // reopen the main menu
+                dispose();
+                TestWoE.main(null);
             }
         });
-
 
         refresh();
         setVisible(true);
     }
 
-    /** === Draw the world grid === */
+    /**
+     * Dessine la grille du monde avec ses éléments : joueur, monstres et objets.
+     *
+     * @param g contexte graphique utilisé pour le dessin
+     */
     private void drawWorld(Graphics g) {
         int tailleCase = 25;
         int longueur = monde.getLongueur();
@@ -133,24 +171,20 @@ public class InterfaceJeu extends JFrame implements KeyListener {
         }
     }
 
-    /** === Refresh UI === */
+    /**
+     * Rafraîchit l’affichage et met à jour les informations du joueur et des créatures proches.
+     * <p>Si le joueur meurt, la partie est terminée et le menu principal est rouvert.</p>
+     */
     private void refresh() {
         Personnage perso = joueur.getPersoJoueur();
 
-        // === Check if player is dead ===
         if (perso.getPtVie() <= 0) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "💀 Vous êtes mort !\nPartie terminée.",
-                    "Game Over",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            dispose(); // close the current game window
-            TestWoE.main(null); // return to main menu
-            return; // stop refresh logic
+            JOptionPane.showMessageDialog(this, "💀 Vous êtes mort !\nPartie terminée.", "Game Over", JOptionPane.ERROR_MESSAGE);
+            dispose();
+            TestWoE.main(null);
+            return;
         }
 
-        // === Update player stats ===
         statsJoueur.setText("=== Joueur ===\n" +
                 "Nom : " + perso.getNom() + "\n" +
                 "PV : " + perso.getPtVie() + "\n" +
@@ -158,7 +192,6 @@ public class InterfaceJeu extends JFrame implements KeyListener {
                 "Parade : " + perso.getPtPar() + "\n" +
                 "Pos : " + perso.getPos() + "\n");
 
-        // === Update nearby creature stats ===
         ArrayList<Creature> cibles = monde.ChercherCibles(perso);
         if (!cibles.isEmpty()) {
             Creature cible = cibles.get(0);
@@ -170,13 +203,13 @@ public class InterfaceJeu extends JFrame implements KeyListener {
             statsCreature.setText("Aucune créature à portée");
         }
 
-        // === Redraw ===
         grillePanel.repaint();
         requestFocusInWindow();
     }
 
-
-    /** === Combat === */
+    /**
+     * Ouvre une boîte de dialogue permettant de choisir et d’attaquer une cible à portée.
+     */
     private void combattreCible() {
         Personnage perso = joueur.getPersoJoueur();
         ArrayList<Creature> cibles = monde.ChercherCibles(perso);
@@ -208,10 +241,9 @@ public class InterfaceJeu extends JFrame implements KeyListener {
             Creature cible = cibles.get(idx);
             try {
                 perso.getClass().getMethod("combattre", Creature.class).invoke(perso, cible);
-                monde.supprimerMorts();  // 🧹 instantly remove dead creatures
+                monde.supprimerMorts();
                 JOptionPane.showMessageDialog(this, "Combat terminé !");
                 refresh();
-
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Erreur de combat : " + ex.getMessage());
             }
@@ -219,7 +251,9 @@ public class InterfaceJeu extends JFrame implements KeyListener {
         }
     }
 
-    /** === Inventory === */
+    /**
+     * Ouvre l’inventaire du joueur et permet d’utiliser un objet.
+     */
     private void ouvrirInventaire() {
         ArrayList<Objet> inv = joueur.getInventaire();
         if (inv.isEmpty()) {
@@ -252,7 +286,7 @@ public class InterfaceJeu extends JFrame implements KeyListener {
         }
     }
 
-    /** === Keyboard Movement (ZQSD / WASD) === */
+    /** Gère les déplacements du joueur via le clavier (touches ZQSD ou flèches). */
     @Override
     public void keyPressed(KeyEvent e) {
         int dx = 0, dy = 0;
@@ -261,22 +295,10 @@ public class InterfaceJeu extends JFrame implements KeyListener {
         int y = perso.getPos().getY();
 
         switch (e.getKeyCode()) {
-            // Z or ↑ → move up
-            case KeyEvent.VK_Z, KeyEvent.VK_UP -> {
-                if (y < monde.getLargeur() - 1) dy = 1;
-            }
-            // S or ↓ → move down
-            case KeyEvent.VK_S, KeyEvent.VK_DOWN -> {
-                if (y > 0) dy = -1;
-            }
-            // Q or ← → move left
-            case KeyEvent.VK_Q, KeyEvent.VK_LEFT -> {
-                if (x > 0) dx = -1;
-            }
-            // D or → → move right
-            case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> {
-                if (x < monde.getLongueur() - 1) dx = 1;
-            }
+            case KeyEvent.VK_Z, KeyEvent.VK_UP -> { if (y < monde.getLargeur() - 1) dy = 1; }
+            case KeyEvent.VK_S, KeyEvent.VK_DOWN -> { if (y > 0) dy = -1; }
+            case KeyEvent.VK_Q, KeyEvent.VK_LEFT -> { if (x > 0) dx = -1; }
+            case KeyEvent.VK_D, KeyEvent.VK_RIGHT -> { if (x < monde.getLongueur() - 1) dx = 1; }
         }
 
         if (dx != 0 || dy != 0) {
@@ -285,22 +307,30 @@ public class InterfaceJeu extends JFrame implements KeyListener {
         }
     }
 
-
     @Override public void keyReleased(KeyEvent e) {}
     @Override public void keyTyped(KeyEvent e) {}
 
+    /**
+     * Retourne la liste des fichiers de sauvegarde disponibles dans le répertoire courant.
+     *
+     * @return liste des fichiers de sauvegarde (.txt)
+     */
     private static java.util.List<File> getSaveFiles() {
-        File dir = new File("."); // current directory
+        File dir = new File(".");
         File[] files = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".txt"));
         java.util.List<File> saves = new ArrayList<>();
         if (files != null) saves.addAll(java.util.Arrays.asList(files));
         return saves;
     }
 
-
+    /**
+     * Point d’entrée principal de l’interface graphique du jeu.
+     * <p>Affiche le menu principal permettant de démarrer une nouvelle partie,
+     * de charger une sauvegarde ou de quitter le jeu.</p>
+     *
+     * @param args arguments de la ligne de commande (non utilisés)
+     */
     public static void mainInterface(String[] args) {
-
-        //MainMenu.startGame();
         SwingUtilities.invokeLater(() -> {
             String[] options = {"Nouvelle Partie", "Charger Partie", "Quitter"};
             int choix = JOptionPane.showOptionDialog(null,
@@ -312,17 +342,16 @@ public class InterfaceJeu extends JFrame implements KeyListener {
                     options,
                     options[0]);
 
+            // === Création d'une nouvelle partie ===
             if (choix == 0) {
                 World monde = new World();
                 monde.setLongueur(20);
                 monde.setLargeur(20);
 
-                // Player creation
                 Joueur joueur = new Joueur();
                 String nom = JOptionPane.showInputDialog("Entrez votre nom :");
                 joueur.setNom(nom);
 
-                // Character selection
                 String[] classes = {"Guerrier", "Archer"};
                 String persoType = (String) JOptionPane.showInputDialog(null,
                         "Choisissez votre personnage :",
@@ -342,24 +371,22 @@ public class InterfaceJeu extends JFrame implements KeyListener {
                 joueur.setPersoJoueur(perso);
                 monde.setJoueur(joueur);
                 monde.getMaListePers().add(perso);
-
-                // Generate world
                 monde.creerMondeAlea(2, 2, 3, 1, 2, 2, 2, 1, 1);
-
                 new InterfaceJeu(monde, joueur);
             }
+
+            // === Chargement d'une partie existante ===
             else if (choix == 1) {
                 java.util.List<File> saves = getSaveFiles();
 
                 if (saves.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Aucune sauvegarde trouvée !");
-                    InterfaceJeu.mainInterface(null); // return to menu
+                    InterfaceJeu.mainInterface(null);
                     return;
                 }
 
-                // Convert to list of file names
+                // Affichage de la liste des sauvegardes
                 String[] nomsSaves = saves.stream().map(File::getName).toArray(String[]::new);
-
                 JPanel panel = new JPanel(new BorderLayout());
                 JList<String> list = new JList<>(nomsSaves);
                 list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -383,7 +410,7 @@ public class InterfaceJeu extends JFrame implements KeyListener {
                 dialog.setSize(400, 300);
                 dialog.setLocationRelativeTo(null);
 
-                // === Actions ===
+                // === Boutons de gestion des sauvegardes ===
                 loadBtn.addActionListener(ev -> {
                     String selected = list.getSelectedValue();
                     if (selected != null) {
@@ -393,7 +420,6 @@ public class InterfaceJeu extends JFrame implements KeyListener {
                             monde.ChargementPartie(selected);
                             Joueur joueur = monde.getJoueur();
 
-                            // 🔧 Ensure player character is added to world
                             if (joueur != null && joueur.getPersoJoueur() != null &&
                                     !monde.getMaListePers().contains(joueur.getPersoJoueur())) {
                                 monde.getMaListePers().add(joueur.getPersoJoueur());
@@ -428,7 +454,7 @@ public class InterfaceJeu extends JFrame implements KeyListener {
                             if (f.delete()) {
                                 JOptionPane.showMessageDialog(dialog, "Sauvegarde supprimée !");
                                 dialog.dispose();
-                                mainInterface(null); // refresh menu
+                                mainInterface(null);
                             } else {
                                 JOptionPane.showMessageDialog(dialog, "Échec de la suppression !");
                             }
@@ -440,16 +466,16 @@ public class InterfaceJeu extends JFrame implements KeyListener {
 
                 cancelBtn.addActionListener(ev -> {
                     dialog.dispose();
-                    mainInterface(null); // back to menu
+                    mainInterface(null);
                 });
 
                 dialog.setVisible(true);
             }
+
+            // === Quitter le jeu ===
             else {
                 System.exit(0);
             }
         });
-
     }
-
 }

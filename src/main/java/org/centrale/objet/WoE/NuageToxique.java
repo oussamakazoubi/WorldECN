@@ -162,17 +162,30 @@ public class NuageToxique extends Objet implements Deplacable, Combattant {
         }
     }
 
-    public void deplace(World monde){
+    /**
+     * Déplace le nuage toxique dans le monde aléatoirement,
+     * en évitant les cases déjà occupées.
+     *
+     * <p>Le nuage essaie jusqu’à 50 positions différentes pour trouver
+     * une case libre. Si aucune n’est disponible après 50 essais,
+     * il reste sur place.</p>
+     *
+     * @param monde le monde dans lequel le nuage se déplace
+     */
+    public void deplace(World monde) {
         int dx, dy;
-        int count=0;
+        int count = 0;
         Random rand = new Random();
         Point2D newpos;
-        do{
+        do {
             dx = rand.nextInt(3) - 1;
             dy = rand.nextInt(3) - 1;
             newpos = new Point2D(this.getPosition().getX() + dx, this.getPosition().getY() + dy);
             count++;
-        }while(monde.estOccupee(newpos) || (dx==0 && dy==0) && count<50);
-        if (count<50) {this.setPosition(newpos);}
+        } while (monde.estOccupee(newpos) || (dx == 0 && dy == 0) && count < 50);
+        if (count < 50) {
+            this.setPosition(newpos);
+        }
     }
+
 }
