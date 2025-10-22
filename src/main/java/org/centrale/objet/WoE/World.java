@@ -282,6 +282,7 @@ public class World {
     public boolean estOccupee(Point2D p) {
         for (Personnage pers : maListePers) if (pers.getPos().equals(p)) return true;
         for (Monstre mon : maListeMons) if (mon.getPos().equals(p)) return true;
+        if (p.getX()<0 || p.getY()<0 || p.getX()>=this.longueur || p.getY()>=this.largeur) return true;
         return false;
     }
 
@@ -345,19 +346,22 @@ public class World {
 
         // Déplacement des objets déplaçables (ex. : NuageToxique)
         for (Objet o : maListeobj) {
-            if (o instanceof Deplacable) ((Deplacable) o).deplace();
+            if (o instanceof Deplacable) ((Deplacable) o).deplace(this);
         }
 
         // Résolution des combats
         for (int i = 0; i < toutes.size(); i++) {
+            Creature c1 = toutes.get(i);
             for (int j = 0; j < toutes.size(); j++) {
                 if (i != j) {
-                    Creature c1 = toutes.get(i);
                     Creature c2 = toutes.get(j);
                     if (c1 instanceof Combattant) {
                         ((Combattant) c1).combattre(c2);
                     }
                 }
+            }
+            for (Objet o : maListeobj) {
+                if (o instanceof Combattant) ((Combattant) o).combattre(c1);
             }
         }
     }

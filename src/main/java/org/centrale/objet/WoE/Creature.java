@@ -188,14 +188,16 @@ protected void chargerDepuisTokenizer(StringTokenizer st) {
 
     public void deplace(World monde){
         int dx, dy;
+        int count=0;
         Random rand = new Random();
         Point2D newpos;
         do{
             dx = rand.nextInt(3) - 1;
             dy = rand.nextInt(3) - 1;
             newpos = new Point2D(this.pos.getX() + dx, this.pos.getY() + dy);
-        }while(monde.estOccupee(newpos) || (dx==0 && dy==0));
-        this.pos=newpos;
+            count++;
+        }while(monde.estOccupee(newpos) || (dx==0 && dy==0) && count<50);
+        if (count<50) {this.pos=newpos;}
     }
 
 

@@ -19,4 +19,5 @@ public interface Deplacable {
      * un monstre peut poursuivre une cible, etc.
      */
     public void deplace();
+    public void deplace(World monde);
 }

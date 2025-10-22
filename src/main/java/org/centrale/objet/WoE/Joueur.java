@@ -186,30 +186,28 @@ public class Joueur {
         Scanner scanner = new Scanner(System.in);
         Personnage perso = null;
 
-        while (perso == null) {
-            System.out.println("Rentrer un personnage jouable :");
-            String persoChoisi = scanner.nextLine();
+        System.out.println("Rentrer un personnage jouable :");
+        String persoChoisi = scanner.nextLine();
 
-            for (Class<? extends Personnage> cl : PersoJouable) {
-                if (persoChoisi.equalsIgnoreCase(cl.getSimpleName())) {
-                    System.out.println("Rentrer le nom du personnage choisi :");
-                    String NomPersoChoisi = scanner.nextLine();
-                    try {
-                        perso = cl.getDeclaredConstructor().newInstance();
-                        monde.definirStatsAlea(perso);
-                        perso.setNom(NomPersoChoisi);
-                        this.persoJoueur = perso;
-                        monde.maListePers.add(perso);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+        for (Class<? extends Personnage> cl : PersoJouable) {
+            if (persoChoisi.equalsIgnoreCase(cl.getSimpleName())) {
+                System.out.println("Rentrer le nom du personnage choisi :");
+                String NomPersoChoisi = scanner.nextLine();
+                try {
+                    perso = cl.getDeclaredConstructor().newInstance();
+                    monde.definirStatsAlea(perso);
+                    perso.setNom(NomPersoChoisi);
+                    this.persoJoueur = perso;
+                    monde.maListePers.add(perso);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
+        }
 
-            if (perso == null) {
-                System.out.println("Classe non jouable. Réessayez !");
-                ChoisirPersonnage(monde);
-            }
+        if (perso == null) {
+            System.out.println("Classe non jouable. Réessayez !");
+            ChoisirPersonnage(monde);
         }
     }
 
