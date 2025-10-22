@@ -58,6 +58,7 @@ public class FeuilleEpinart extends Nourriture {
     @Override
     public void utiliserObjet(Personnage p) {
         if (!getEstActive()) {
+            p.getUtilisables().add(this);
             System.out.println(p.getNom() + " mange une feuille d’épinard !");
             p.setDegAtt(p.getDegAtt() + bonusDegAtt);
             setEstActive(true);

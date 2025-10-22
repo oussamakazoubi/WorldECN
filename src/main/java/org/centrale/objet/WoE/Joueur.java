@@ -428,6 +428,7 @@ public class Joueur {
             this.persoJoueur.getClass()
                     .getMethod("combattre", Creature.class)
                     .invoke(this.persoJoueur, cible);
+            monde.supprimerMorts();
 
         } catch (Exception e) {
             System.out.println("Erreur de combat : " + e.getMessage());
@@ -533,5 +534,15 @@ public class Joueur {
         System.out.println("N : Nuage toxique");
         System.out.println(". : Case vide");
         System.out.println("========================\n");
+    }
+
+    public void movePlayer(World monde, int dx, int dy) {
+        Personnage perso = getPersoJoueur();
+        Point2D newPos = new Point2D(perso.getPos());
+        newPos.translate(dx, dy);
+        if (!monde.estOccupee(newPos)) {
+            perso.getPos().translate(dx, dy);
+            monde.chercherObjet(perso);
+        }
     }
 }

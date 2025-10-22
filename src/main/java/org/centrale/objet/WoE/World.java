@@ -286,6 +286,17 @@ public class World {
         return false;
     }
 
+
+    public Creature getCreatureAt(Point2D pos) {
+        ArrayList<Creature> creatures = new ArrayList<>();
+        creatures.addAll(maListePers);
+        creatures.addAll(maListeMons);
+        for (Creature c : creatures) {
+            if (c.getPos().equals(pos)) return c;
+        }
+        return null;
+    }
+
     /**
      * Permet à une créature de chercher et d’utiliser un objet présent sur sa case.
      *
@@ -329,6 +340,11 @@ public class World {
         return cibles;
     }
 
+    public void supprimerMorts() {
+        maListePers.removeIf(p -> p.getPtVie() <= 0);
+        maListeMons.removeIf(m -> m.getPtVie() <= 0);
+    }
+
     /**
      * Effectue un tour complet du jeu :
      * <ul>
@@ -364,6 +380,13 @@ public class World {
                 if (o instanceof Combattant) ((Combattant) o).combattre(c1);
             }
         }
+
+        supprimerMorts();
+        // === Update temporary food effects ===
+        for (Personnage p : maListePers) {
+            p.mettreAJourEffets();
+        }
+
     }
 
     /**
@@ -477,6 +500,16 @@ public class World {
         } catch (IOException e) {
             System.err.println("Erreur lors du chargement : " + e.getMessage());
         }
+        System.out.println("Chargement du fichier " + nomFichier + " terminé avec succès.");
+
+            // === 🧩 Ensure the player's character appears in the world ===
+            if (joueur != null && joueur.getPersoJoueur() != null) {
+                Personnage p = joueur.getPersoJoueur();
+                if (!maListePers.contains(p)) {
+                    maListePers.add(p);
+                }
+            }
+
     }
 
     // ===================== AFFICHAGE =====================

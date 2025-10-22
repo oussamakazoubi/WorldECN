@@ -131,4 +131,5 @@ public abstract class Nourriture extends Objet {
     public String toString() {
         return super.toString() + " (effet : " + dureeEffet + " tours restants)";
     }
+
 }

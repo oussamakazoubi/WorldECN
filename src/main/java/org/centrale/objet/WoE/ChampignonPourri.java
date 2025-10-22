@@ -95,6 +95,7 @@ public class ChampignonPourri extends Nourriture {
      */
     @Override
     public void utiliserObjet(Personnage p) {
+        p.getUtilisables().add(this);
         if (!getEstActive()) {
             System.out.println(p.getNom() + " mange un champignon pourri !");
             p.setDegAtt(p.getDegAtt() - malusDefense);
